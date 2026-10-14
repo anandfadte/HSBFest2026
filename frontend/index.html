@@ -150,32 +150,151 @@
     .breathe-emerald { animation: borderBreatheEmerald 4.5s ease-in-out infinite; }
     .breathe-rose { animation: borderBreatheRose 3.6s ease-in-out infinite; }
     .breathe-amber { animation: borderBreatheAmber 4.1s ease-in-out infinite; }
+
+    /* Running Parade & Action Characters Above Nov 14 */
+    @keyframes runTrackAcross {
+      0% { left: -75px; opacity: 0; }
+      4% { opacity: 1; }
+      96% { opacity: 1; }
+      100% { left: 104%; opacity: 0; }
+    }
+    .runner-football { animation: runTrackAcross 12s linear infinite 0s; }
+    .runner-dancer { animation: runTrackAcross 15s linear infinite 3.2s; }
+    .runner-guitarist { animation: runTrackAcross 17s linear infinite 6.8s; }
+    .runner-breakdancer { animation: runTrackAcross 13.5s linear infinite 10.2s; }
+    .runner-robot { animation: runTrackAcross 9.5s linear infinite 1.6s; }
+    .runner-torch { animation: runTrackAcross 12.5s linear infinite 4.8s; }
+    .fest-runner:hover { animation-play-state: paused; }
+
+    @keyframes runnerBobMotion {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-7px) rotate(4deg); }
+    }
+    @keyframes ballBounceMotion {
+      0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+      35% { transform: translateY(-16px) rotate(180deg) scale(1.1); }
+      70% { transform: translateY(-3px) rotate(270deg) scale(0.92); }
+    }
+    @keyframes dancerSpinMotion {
+      0%, 100% { transform: translateY(0px) rotate(-8deg) scale(1); }
+      25% { transform: translateY(-12px) rotate(12deg) scale(1.18); }
+      50% { transform: translateY(-2px) rotate(-6deg) scale(1.05); }
+      75% { transform: translateY(-14px) rotate(10deg) scale(1.18); }
+    }
+    @keyframes rockerBobMotion {
+      0%, 100% { transform: translateY(0px) rotate(-4deg); }
+      50% { transform: translateY(-9px) rotate(8deg); }
+    }
+    @keyframes noteFloatMotion {
+      0% { opacity: 0; transform: translateY(0) scale(0.7); }
+      50% { opacity: 1; transform: translateY(-14px) scale(1.15); }
+      100% { opacity: 0; transform: translateY(-28px) scale(0.8); }
+    }
+    @keyframes breakdanceMotion {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-10px) rotate(-16deg) scale(1.1); }
+      50% { transform: translateY(-2px) rotate(10deg) scale(0.95); }
+      75% { transform: translateY(-12px) rotate(-8deg) scale(1.12); }
+    }
+    @keyframes robotZoomMotion {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-4px) scale(1.08); }
+    }
+
+    .animate-runner-bob { animation: runnerBobMotion 0.6s ease-in-out infinite; }
+    .animate-ball-bounce { animation: ballBounceMotion 0.85s ease-in-out infinite; }
+    .animate-dancer-spin { animation: dancerSpinMotion 1.4s ease-in-out infinite; }
+    .animate-rocker-bob { animation: rockerBobMotion 0.75s ease-in-out infinite; }
+    .animate-note-float { animation: noteFloatMotion 1.2s ease-in-out infinite; }
+    .animate-breakdance { animation: breakdanceMotion 0.8s ease-in-out infinite; }
+    .animate-robot-zoom { animation: robotZoomMotion 0.45s ease-in-out infinite; }
+
+    /* Equalizer Bars on Audio Button */
+    @keyframes eqBar1 { 0%, 100% { height: 4px; } 50% { height: 14px; } }
+    @keyframes eqBar2 { 0%, 100% { height: 12px; } 50% { height: 5px; } }
+    @keyframes eqBar3 { 0%, 100% { height: 6px; } 50% { height: 15px; } }
+    @keyframes eqBar4 { 0%, 100% { height: 14px; } 50% { height: 6px; } }
+    .animate-eq-1 { animation: eqBar1 0.65s ease-in-out infinite; }
+    .animate-eq-2 { animation: eqBar2 0.5s ease-in-out infinite 0.1s; }
+    .animate-eq-3 { animation: eqBar3 0.7s ease-in-out infinite 0.2s; }
+    .animate-eq-4 { animation: eqBar4 0.55s ease-in-out infinite 0.15s; }
+
+    /* Barber-Pole Stripes on Event Card Capacity Bar */
+    @keyframes progressStripes {
+      0% { background-position: 0 0; }
+      100% { background-position: 24px 0; }
+    }
+    .animate-stripes {
+      background-image: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.22) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.22) 50%,
+        rgba(255, 255, 255, 0.22) 75%,
+        transparent 75%,
+        transparent
+      );
+      background-size: 16px 16px;
+      animation: progressStripes 0.9s linear infinite;
+    }
+
+    /* Shimmer Button Light Sweep */
+    @keyframes buttonSweep {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(200%); }
+    }
+    .btn-shine-sweep {
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-shine-sweep:hover::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+      transform: skewX(-20deg);
+      animation: buttonSweep 0.8s ease-out;
+    }
   </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-purple-500 selection:text-white">
 
   <!-- Navigation -->
-  <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+  <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <span class="text-2xl select-none">✨</span>
+        <span class="text-2xl select-none animate-twinkle inline-block">✨</span>
         <a href="/" class="text-xl font-black tracking-tight bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300 bg-clip-text text-transparent hover:opacity-95 transition">
           HSB FEST 2026
         </a>
         <span class="hidden sm:inline-block text-xs font-semibold px-2 py-0.5 rounded-full bg-purple-900/60 text-purple-300 border border-purple-700/50">
           Annual College Fest
         </span>
+        <span class="hidden md:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-950/80 border border-emerald-500/50 text-emerald-300 text-[11px] font-bold shadow-[0_0_12px_rgba(16,185,129,0.3)]">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+          </span>
+          Registrations Live
+        </span>
       </div>
 
       <nav class="flex items-center space-x-2 sm:space-x-3">
-        <!-- Fest Audio Toggle Button -->
+        <!-- Fest Audio Toggle Button with Dancing Equalizer Bars -->
         <button
           id="fest-audio-btn"
-          class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-700/60 transition flex items-center gap-1.5 cursor-pointer shadow-sm shadow-purple-900/30"
+          class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-700/60 transition flex items-center gap-2 cursor-pointer shadow-sm shadow-purple-900/30"
           title="Toggle energetic fest synthesizer music"
         >
           <span id="audio-icon" class="text-sm">🎵</span>
           <span id="audio-label" class="hidden sm:inline font-bold">Play Vibe</span>
+          <span id="audio-eq" class="hidden items-end gap-0.5 h-3.5">
+            <span class="w-0.5 bg-pink-400 rounded-full animate-eq-1"></span>
+            <span class="w-0.5 bg-purple-400 rounded-full animate-eq-2"></span>
+            <span class="w-0.5 bg-cyan-400 rounded-full animate-eq-3"></span>
+            <span class="w-0.5 bg-amber-400 rounded-full animate-eq-4"></span>
+          </span>
         </button>
 
         <a href="/" class="px-3 py-1.5 rounded-lg text-sm font-medium text-white bg-slate-800 border border-slate-700 shadow-sm hover:bg-slate-750 transition">
@@ -187,6 +306,8 @@
         </a>
       </nav>
     </div>
+    <!-- Shimmering Cyber Bottom Accent Line -->
+    <div class="h-[1.5px] w-full bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-400 bg-[length:200%_auto] animate-shimmer-title"></div>
   </header>
 
   <!-- Hero Section with Glowing Neon Blobs, Floating Badges & Countdown -->
@@ -250,6 +371,57 @@
     </div>
 
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      
+      <!-- Festival Action Parade: Moving Football Players, Dancers, & Mascots Above Nov 14 -->
+      <div class="relative w-full max-w-xl mx-auto h-16 sm:h-20 mb-3 overflow-hidden select-none pointer-events-auto">
+        <!-- Glowing Cyber Running Track Line -->
+        <div class="absolute bottom-2 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 via-pink-500 via-purple-400 to-transparent opacity-85 shadow-[0_0_12px_#06b6d4]"></div>
+        <div class="absolute bottom-2 left-1/4 right-1/4 h-[2px] border-b border-dashed border-cyan-300/40"></div>
+
+        <!-- Character 1: Football Player & Bouncing Soccer Ball -->
+        <div class="fest-runner runner-football absolute bottom-2.5 flex items-center gap-1.5 cursor-pointer group" title="HSB Sports League - 5-a-Side Football">
+          <span class="text-2xl sm:text-3xl animate-runner-bob filter drop-shadow-[0_0_8px_rgba(6,182,212,0.8)] inline-block">🏃‍♂️</span>
+          <span class="text-lg sm:text-xl animate-ball-bounce inline-block filter drop-shadow-[0_0_6px_#fff]">⚽</span>
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-bold bg-cyan-950/90 text-cyan-200 px-1.5 py-0.5 rounded-full border border-cyan-400 shadow -mt-6">Goal!</span>
+        </div>
+
+        <!-- Character 2: Dancing Star Twirling with Sparkles -->
+        <div class="fest-runner runner-dancer absolute bottom-2.5 flex items-center gap-1 cursor-pointer group" title="Dance Fiesta - Western & Classical">
+          <span class="text-2xl sm:text-3xl animate-dancer-spin filter drop-shadow-[0_0_10px_rgba(236,72,153,0.9)] inline-block">💃</span>
+          <span class="text-base animate-twinkle filter drop-shadow-[0_0_6px_#f59e0b] inline-block">✨</span>
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-bold bg-pink-950/90 text-pink-200 px-1.5 py-0.5 rounded-full border border-pink-400 shadow -mt-6">Dance Off!</span>
+        </div>
+
+        <!-- Character 3: Rock Guitarist with Music Notes -->
+        <div class="fest-runner runner-guitarist absolute bottom-2.5 flex items-center gap-1 cursor-pointer group" title="Battle of the Bands">
+          <span class="text-2xl sm:text-3xl animate-rocker-bob filter drop-shadow-[0_0_10px_rgba(168,85,247,0.9)] inline-block">🧑‍🎤</span>
+          <span class="text-lg animate-pulse inline-block">🎸</span>
+          <span class="text-xs animate-note-float text-purple-300 inline-block font-mono">🎵</span>
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-bold bg-purple-950/90 text-purple-200 px-1.5 py-0.5 rounded-full border border-purple-400 shadow -mt-6">Solo!</span>
+        </div>
+
+        <!-- Character 4: Breakdancer Grooving -->
+        <div class="fest-runner runner-breakdancer absolute bottom-2.5 flex items-center gap-1 cursor-pointer group" title="Street Battle Clash">
+          <span class="text-2xl sm:text-3xl animate-breakdance filter drop-shadow-[0_0_8px_rgba(244,63,94,0.9)] inline-block">🕺</span>
+          <span class="text-sm filter drop-shadow-[0_0_6px_#f43f5e] inline-block">🔥</span>
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-bold bg-rose-950/90 text-rose-200 px-1.5 py-0.5 rounded-full border border-rose-400 shadow -mt-6">Groove!</span>
+        </div>
+
+        <!-- Character 5: Cyber Mascot Robot on Wheels -->
+        <div class="fest-runner runner-robot absolute bottom-2.5 flex items-center gap-1 cursor-pointer group" title="Robo Race 2.0">
+          <span class="text-2xl sm:text-3xl animate-robot-zoom filter drop-shadow-[0_0_10px_rgba(34,211,238,0.9)] inline-block">🤖</span>
+          <span class="text-base animate-pulse inline-block">⚡</span>
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-bold bg-cyan-950/90 text-cyan-200 px-1.5 py-0.5 rounded-full border border-cyan-400 shadow -mt-6">Turbo!</span>
+        </div>
+
+        <!-- Character 6: Torch Runner -->
+        <div class="fest-runner runner-torch absolute bottom-2.5 flex items-center gap-1 cursor-pointer group" title="Opening Fest Flame">
+          <span class="text-2xl sm:text-3xl animate-runner-bob filter drop-shadow-[0_0_8px_rgba(245,158,11,0.9)] inline-block">🏃‍♀️</span>
+          <span class="text-base animate-pulse text-amber-400 inline-block">🔥</span>
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-bold bg-amber-950/90 text-amber-200 px-1.5 py-0.5 rounded-full border border-amber-400 shadow -mt-6">Ignite!</span>
+        </div>
+      </div>
+
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs sm:text-sm font-semibold mb-5 shadow-sm">
         <span class="animate-pulse">📍</span>
         <span>Nov 14 – 15, 2026</span>

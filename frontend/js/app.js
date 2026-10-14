@@ -160,11 +160,28 @@ function renderEventsGrid(events) {
       ? "bg-gradient-to-r from-amber-500 to-rose-500 animate-pulse"
       : "bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-400";
 
+    let featureBadge = "";
+    if (isFull) {
+      featureBadge = `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-rose-950/90 text-rose-300 border border-rose-500/60 shadow-[0_0_8px_rgba(244,63,94,0.4)] animate-pulse">Sold Out</span>`;
+    } else if (isFastFilling) {
+      featureBadge = `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-950/90 text-amber-300 border border-amber-500/60 shadow-[0_0_8px_rgba(245,158,11,0.4)] animate-pulse">🔥 High Demand</span>`;
+    } else if (event.category === "Technical") {
+      featureBadge = `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-cyan-950/90 text-cyan-300 border border-cyan-500/60 shadow-[0_0_8px_rgba(6,182,212,0.3)]">⚡ Tech Arena</span>`;
+    } else if (event.category === "Gaming") {
+      featureBadge = `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-rose-950/90 text-rose-300 border border-rose-500/60 shadow-[0_0_8px_rgba(244,63,94,0.3)]">🎮 Battle Mode</span>`;
+    } else if (event.category === "Cultural") {
+      featureBadge = `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-purple-950/90 text-purple-300 border border-purple-500/60 shadow-[0_0_8px_rgba(168,85,247,0.3)]">✨ Main Stage</span>`;
+    } else if (event.category === "Sports") {
+      featureBadge = `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-950/90 text-emerald-300 border border-emerald-500/60 shadow-[0_0_8px_rgba(16,185,129,0.3)]">🏆 Trophy Clash</span>`;
+    } else {
+      featureBadge = `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-950/90 text-amber-300 border border-amber-500/60 shadow-[0_0_8px_rgba(245,158,11,0.3)]">💡 Masterclass</span>`;
+    }
+
     card.innerHTML = `
       <div>
         <div class="flex items-start justify-between gap-3 mb-3">
           <div class="flex items-center gap-2.5">
-            <span class="text-3xl p-2.5 rounded-xl bg-slate-750/90 border border-slate-700/60 ${iconAnim} group-hover:scale-110 transition-transform select-none inline-block">
+            <span class="text-3xl p-2.5 rounded-xl bg-slate-750/90 border border-slate-700/60 ${iconAnim} group-hover:scale-110 transition-transform select-none inline-block shadow-inner">
               ${event.icon || "✨"}
             </span>
             <div>
@@ -176,12 +193,13 @@ function renderEventsGrid(events) {
               </h3>
             </div>
           </div>
-          <div>
+          <div class="flex flex-col items-end gap-1">
             ${
               isFull
                 ? `<span class="px-2 py-0.5 text-xs font-black uppercase rounded bg-rose-950 text-rose-300 border border-rose-800 animate-pulse">FULL</span>`
                 : `<span class="px-2 py-0.5 text-xs font-semibold rounded bg-slate-900 text-slate-300 border border-slate-700">${feeText}</span>`
             }
+            ${featureBadge}
           </div>
         </div>
 
@@ -199,7 +217,7 @@ function renderEventsGrid(events) {
             <span class="truncate">${event.venue}</span>
           </div>
 
-          <!-- Capacity Info with Visual Animated Progress Bar -->
+          <!-- Capacity Info with Visual Animated Barber-Pole Progress Bar -->
           <div class="pt-1">
             <div class="flex items-center justify-between text-slate-300 font-medium text-xs mb-1.5">
               <span class="text-slate-400">Capacity:</span>
@@ -214,8 +232,8 @@ function renderEventsGrid(events) {
                 </span>
               </div>
             </div>
-            <div class="w-full bg-slate-900/90 rounded-full h-1.5 overflow-hidden border border-slate-700/60">
-              <div class="h-full rounded-full transition-all duration-700 ${barGradient}" style="width: ${Math.max(4, fillPct)}%"></div>
+            <div class="w-full bg-slate-900/90 rounded-full h-2 overflow-hidden border border-slate-700/60 shadow-inner">
+              <div class="h-full rounded-full transition-all duration-700 ${barGradient} animate-stripes" style="width: ${Math.max(4, fillPct)}%"></div>
             </div>
           </div>
         </div>
@@ -223,7 +241,7 @@ function renderEventsGrid(events) {
 
       <button
         onclick="openEventDetails(${event.id})"
-        class="w-full py-2.5 px-3 text-xs sm:text-sm font-bold rounded-xl bg-slate-750 hover:bg-gradient-to-r hover:from-purple-600 hover:via-pink-600 hover:to-indigo-600 active:scale-[0.98] text-white border border-slate-700 hover:border-pink-500 transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer shadow-md group/btn"
+        class="w-full py-2.5 px-3 text-xs sm:text-sm font-bold rounded-xl bg-slate-750 hover:bg-gradient-to-r hover:from-purple-600 hover:via-pink-600 hover:to-indigo-600 active:scale-[0.98] text-white border border-slate-700 hover:border-pink-500 transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer shadow-md group/btn btn-shine-sweep"
       >
         <span>View Details & Register</span>
         <span class="text-xs transition-transform duration-200 group-hover/btn:translate-x-1">→</span>
@@ -631,6 +649,12 @@ function toggleFestAudio() {
     if (label) label.textContent = "Playing Vibe...";
     if (btn) btn.classList.add("bg-purple-600", "text-white", "animate-pulse");
 
+    const eq = document.getElementById("audio-eq");
+    if (eq) {
+      eq.classList.remove("hidden");
+      eq.classList.add("flex");
+    }
+
     const melody = [
       { freq: 440.0, time: 0.0, dur: 0.2 },
       { freq: 523.25, time: 0.25, dur: 0.2 },
@@ -690,9 +714,14 @@ function stopFestAudio() {
   const btn = document.getElementById("fest-audio-btn");
   const icon = document.getElementById("audio-icon");
   const label = document.getElementById("audio-label");
+  const eq = document.getElementById("audio-eq");
   if (icon) icon.textContent = "🎵";
   if (label) label.textContent = "Play Vibe";
   if (btn) btn.classList.remove("bg-purple-600", "text-white", "animate-pulse");
+  if (eq) {
+    eq.classList.add("hidden");
+    eq.classList.remove("flex");
+  }
 }
 
 // -------------------------------------------------------------
@@ -748,6 +777,8 @@ function startTypewriter() {
 // -------------------------------------------------------------
 // Interactive Cyber Constellation Particles Canvas
 // -------------------------------------------------------------
+// Interactive Cyber Constellation Particles Canvas (High-Luminance Cyber Neon)
+// -------------------------------------------------------------
 function initFestParticles() {
   const canvas = document.getElementById("fest-particles-canvas");
   const heroSection = document.getElementById("hero-section");
@@ -757,18 +788,19 @@ function initFestParticles() {
   if (!ctx) return;
 
   let particles = [];
-  const particleCount = 55;
+  const particleCount = 80;
   const colors = [
-    "rgba(168, 85, 247, ", // purple
-    "rgba(236, 72, 153, ", // pink
-    "rgba(6, 182, 212, ",  // cyan
-    "rgba(245, 158, 11, ", // amber
+    "rgba(0, 245, 255, ",   // Electric Neon Cyan
+    "rgba(255, 30, 150, ",  // Hot Magenta Pink
+    "rgba(185, 75, 255, ",  // Electric Cyber Violet
+    "rgba(255, 220, 0, ",   // Bright Cyber Gold
+    "rgba(0, 255, 170, ",   // Neon Spring Lime
   ];
 
   const mouse = {
     x: null,
     y: null,
-    radius: 130
+    radius: 170
   };
 
   function resizeCanvas() {
@@ -807,41 +839,57 @@ function initFestParticles() {
 
     reset() {
       this.x = Math.random() * (canvas.width || window.innerWidth);
-      this.y = Math.random() * (canvas.height || 400);
-      this.radius = Math.random() * 2 + 1.2;
-      this.vx = (Math.random() - 0.5) * 0.75;
-      this.vy = (Math.random() - 0.5) * 0.75;
-      this.baseColor = colors[Math.floor(Math.random() * colors.length)];
-      this.alpha = Math.random() * 0.5 + 0.35;
+      this.y = Math.random() * (canvas.height || 420);
+      this.isSuper = Math.random() < 0.28; // 28% are prominent glowing super stars!
+      this.radius = this.isSuper ? Math.random() * 2.5 + 4.5 : Math.random() * 2.0 + 2.5;
+      this.vx = (Math.random() - 0.5) * 0.85;
+      this.vy = (Math.random() - 0.5) * 0.85;
+      this.colorIndex = Math.floor(Math.random() * colors.length);
+      this.baseColor = colors[this.colorIndex];
+      this.alpha = Math.random() * 0.3 + 0.7; // 0.70 to 1.0 (Highly visible!)
+      this.pulse = Math.random() * Math.PI * 2;
+      this.pulseSpeed = Math.random() * 0.04 + 0.02;
     }
 
     update() {
       this.x += this.vx;
       this.y += this.vy;
+      this.pulse += this.pulseSpeed;
 
       if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
       if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
 
-      // Gentle interactive mouse evasion / constellation pull
+      // Mouse interactive push & tether
       if (mouse.x !== null && mouse.y !== null) {
         const dx = mouse.x - this.x;
         const dy = mouse.y - this.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < mouse.radius && dist > 0) {
           const force = (mouse.radius - dist) / mouse.radius;
-          this.x -= (dx / dist) * force * 1.5;
-          this.y -= (dy / dist) * force * 1.5;
+          this.x -= (dx / dist) * force * 1.8;
+          this.y -= (dy / dist) * force * 1.8;
         }
       }
     }
 
     draw() {
+      const currentRadius = this.radius + Math.sin(this.pulse) * (this.isSuper ? 1.6 : 0.6);
+      
       ctx.beginPath();
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.arc(this.x, this.y, Math.max(1.2, currentRadius), 0, Math.PI * 2);
       ctx.fillStyle = this.baseColor + this.alpha + ")";
-      ctx.shadowBlur = 8;
-      ctx.shadowColor = this.baseColor + "0.75)";
+      ctx.shadowBlur = this.isSuper ? 22 : 12;
+      ctx.shadowColor = this.baseColor + "1)";
       ctx.fill();
+
+      // Outer sparkling halo on Super Stars
+      if (this.isSuper) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, currentRadius * 1.9, 0, Math.PI * 2);
+        ctx.strokeStyle = this.baseColor + "0.45)";
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+      }
       ctx.shadowBlur = 0;
     }
   }
@@ -857,38 +905,58 @@ function initFestParticles() {
       particles[i].update();
       particles[i].draw();
 
-      // Connect near particles with delicate neon threads
+      // Connect near particles with vivid neon threads
       for (let j = i + 1; j < particles.length; j++) {
         const dx = particles[i].x - particles[j].x;
         const dy = particles[i].y - particles[j].y;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
-        if (dist < 95) {
-          const lineAlpha = (1 - dist / 95) * 0.22;
+        if (dist < 135) {
+          const lineAlpha = (1 - dist / 135) * 0.7; // Bright 0.70 max opacity
           ctx.beginPath();
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(168, 85, 247, ${lineAlpha})`;
-          ctx.lineWidth = 0.8;
+          ctx.strokeStyle = particles[i].baseColor + lineAlpha + ")";
+          ctx.lineWidth = 1.4;
           ctx.stroke();
         }
       }
 
-      // Connect nearby particles to cursor
+      // Connect nearby particles to mouse cursor with intense glowing laser
       if (mouse.x !== null && mouse.y !== null) {
         const dx = particles[i].x - mouse.x;
         const dy = particles[i].y - mouse.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < mouse.radius) {
-          const mouseLineAlpha = (1 - dist / mouse.radius) * 0.45;
+          const mouseLineAlpha = (1 - dist / mouse.radius) * 0.95;
           ctx.beginPath();
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(mouse.x, mouse.y);
-          ctx.strokeStyle = `rgba(236, 72, 153, ${mouseLineAlpha})`;
-          ctx.lineWidth = 1.1;
+          ctx.strokeStyle = `rgba(0, 245, 255, ${mouseLineAlpha})`;
+          ctx.lineWidth = 2.2;
+          ctx.shadowBlur = 12;
+          ctx.shadowColor = "rgba(0, 245, 255, 0.9)";
           ctx.stroke();
+          ctx.shadowBlur = 0;
         }
       }
+    }
+
+    // Draw interactive neon cursor reticle
+    if (mouse.x !== null && mouse.y !== null) {
+      ctx.beginPath();
+      ctx.arc(mouse.x, mouse.y, 22, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(0, 245, 255, 0.75)";
+      ctx.lineWidth = 1.8;
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = "rgba(0, 245, 255, 0.9)";
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(mouse.x, mouse.y, 5, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(255, 30, 150, 0.95)";
+      ctx.fill();
+      ctx.shadowBlur = 0;
     }
 
     requestAnimationFrame(animate);
