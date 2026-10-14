@@ -685,8 +685,28 @@ document.addEventListener("keydown", (e) => {
 });
 
 // -------------------------------------------------------------
-// Live Fest Countdown Timer with 3D Flip Digits & Tick Pulse
+// Live Fest Countdown Timer with Full Sci-Fi HUD Suite
 // -------------------------------------------------------------
+function showLiveActivityToastCustom(message) {
+  const container = document.getElementById("live-activity-container");
+  if (!container) return;
+  const toast = document.createElement("div");
+  toast.className =
+    "toast-enter flex items-center gap-3 p-3.5 rounded-2xl bg-slate-900/95 backdrop-blur-md border border-cyan-500/60 shadow-2xl text-xs text-white group mb-2.5 max-w-sm";
+  toast.innerHTML = `
+    <span class="text-xl">✨</span>
+    <span class="flex-1 font-semibold text-slate-100">${message}</span>
+  `;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.remove("toast-enter");
+    toast.classList.add("toast-exit");
+    setTimeout(() => {
+      if (toast.parentNode) toast.parentNode.removeChild(toast);
+    }, 320);
+  }, 4000);
+}
+
 function startFestCountdown() {
   const festDate = new Date("2026-11-14T10:00:00").getTime();
 
@@ -694,6 +714,19 @@ function startFestCountdown() {
   let lastHours = "";
   let lastMinutes = "";
   let lastSeconds = "";
+  let timerInterval = null;
+  let isSimulating = false;
+
+  const elDays = document.getElementById("timer-days");
+  const elHours = document.getElementById("timer-hours");
+  const elMinutes = document.getElementById("timer-minutes");
+  const elSeconds = document.getElementById("timer-seconds");
+  const secondsRing = document.getElementById("seconds-ring");
+  const energySegs = document.querySelectorAll("#energy-meter-container .energy-seg");
+  const statusTitle = document.getElementById("timer-status-title");
+  const btnLaunchSim = document.getElementById("btn-launch-sim");
+  const btnResetSim = document.getElementById("btn-reset-sim");
+  const latencyEl = document.getElementById("clock-latency");
 
   function flipDigit(el, newText) {
     if (!el) return;
@@ -712,13 +745,10 @@ function startFestCountdown() {
   }
 
   function updateTimer() {
+    if (isSimulating) return;
+
     const now = new Date().getTime();
     const distance = festDate - now;
-
-    const elDays = document.getElementById("timer-days");
-    const elHours = document.getElementById("timer-hours");
-    const elMinutes = document.getElementById("timer-minutes");
-    const elSeconds = document.getElementById("timer-seconds");
 
     if (distance <= 0) {
       if (elDays) elDays.textContent = "00";
@@ -754,11 +784,143 @@ function startFestCountdown() {
       flipDigit(elSeconds, strSeconds);
       pulseUnitBox("timer-box-seconds");
       lastSeconds = strSeconds;
+
+      // Circular SVG Progress Ring on Seconds (Circumference ~201)
+      if (secondsRing) {
+        const offset = 201 - (201 * (seconds / 60));
+        secondsRing.style.strokeDashoffset = offset;
+      }
+
+      // 10-Segment Cyber Core Energy Meter
+      const litCount = Math.max(1, Math.ceil(((seconds % 60) + 1) / 6));
+      energySegs.forEach((seg, idx) => {
+        if (idx < litCount) {
+          seg.classList.add("lit");
+          seg.classList.remove("unlit");
+        } else {
+          seg.classList.remove("lit");
+          seg.classList.add("unlit");
+        }
+      });
     }
   }
 
   updateTimer();
-  setInterval(updateTimer, 1000);
+  timerInterval = setInterval(updateTimer, 1000);
+
+  // Latency clock randomizer (11ms - 15ms)
+  setInterval(() => {
+    if (latencyEl) {
+      const ms = Math.floor(11 + Math.random() * 5);
+      latencyEl.textContent = `${ms}ms`;
+    }
+  }, 3500);
+
+  // ---------------------------------------------------------
+  // Feature 1: Fast-Forward Launch Demo Simulation
+  // ---------------------------------------------------------
+  if (btnLaunchSim && btnResetSim) {
+    btnLaunchSim.addEventListener("click", () => {
+      if (isSimulating) return;
+      isSimulating = true;
+      clearInterval(timerInterval);
+
+      if (statusTitle) {
+        statusTitle.textContent = "⚡ SIMULATING COUNTDOWN ACCELERATION...";
+        statusTitle.className = "text-[10px] sm:text-xs font-black tracking-widest uppercase text-amber-300 font-mono animate-pulse";
+      }
+
+      playFilterWhoosh();
+
+      // Rapidly count down units over 2.4 seconds
+      let simSecs = 10;
+      let simMins = 3;
+      let simHours = 2;
+      let simDays = 1;
+
+      const simStep = setInterval(() => {
+        simSecs -= 1;
+        if (simSecs < 0) {
+          simSecs = 9;
+          simMins = Math.max(0, simMins - 1);
+          simHours = Math.max(0, simHours - 1);
+          simDays = Math.max(0, simDays - 1);
+        }
+
+        flipDigit(elDays, String(simDays).padStart(2, "0"));
+        flipDigit(elHours, String(simHours).padStart(2, "0"));
+        flipDigit(elMinutes, String(simMins).padStart(2, "0"));
+        flipDigit(elSeconds, String(simSecs).padStart(2, "0"));
+        pulseUnitBox("timer-box-seconds");
+
+        if (secondsRing) {
+          secondsRing.style.strokeDashoffset = 201 - (201 * (simSecs / 10));
+        }
+
+        if (simDays === 0 && simHours === 0 && simMins === 0 && simSecs === 0) {
+          clearInterval(simStep);
+
+          // Climax: Festival officially live!
+          flipDigit(elDays, "00");
+          flipDigit(elHours, "00");
+          flipDigit(elMinutes, "00");
+          flipDigit(elSeconds, "00");
+
+          if (statusTitle) {
+            statusTitle.textContent = "🔥 FESTIVAL IS LIVE! ARENAS ARE OPEN!";
+            statusTitle.className = "text-[10px] sm:text-xs font-black tracking-widest uppercase bg-gradient-to-r from-emerald-400 via-cyan-400 to-amber-300 bg-clip-text text-transparent font-mono animate-bounce";
+          }
+
+          // Double Confetti Cannon & Fanfare
+          fireFestConfetti();
+          setTimeout(fireFestConfetti, 450);
+          playCelebrationFanfare();
+
+          btnLaunchSim.classList.add("hidden");
+          btnResetSim.classList.remove("hidden");
+        }
+      }, 150);
+    });
+
+    btnResetSim.addEventListener("click", () => {
+      isSimulating = false;
+      btnResetSim.classList.add("hidden");
+      btnLaunchSim.classList.remove("hidden");
+
+      if (statusTitle) {
+        statusTitle.textContent = "T-MINUS TO FESTIVAL LAUNCH";
+        statusTitle.className = "text-[10px] sm:text-xs font-black tracking-widest uppercase bg-gradient-to-r from-rose-400 via-pink-400 to-amber-300 bg-clip-text text-transparent font-mono";
+      }
+
+      playFilterWhoosh();
+      updateTimer();
+      timerInterval = setInterval(updateTimer, 1000);
+    });
+  }
+
+  // ---------------------------------------------------------
+  // Feature 3: One-Click Calendar Integration & Notification
+  // ---------------------------------------------------------
+  const btnCalendar = document.getElementById("btn-add-calendar");
+  if (btnCalendar) {
+    btnCalendar.addEventListener("click", () => {
+      playHoverBlip();
+      const gCalUrl =
+        "https://calendar.google.com/calendar/render?action=TEMPLATE&text=HSB+FEST+2026&dates=20261114T043000Z/20261115T163000Z&details=The+ultimate+college+arena+of+technology,+culture,+design,+gaming,+and+sports+at+HSB+FEST+2026.&location=Campus+Grounds";
+      window.open(gCalUrl, "_blank");
+      showLiveActivityToastCustom("📅 Event added to your calendar! See you on Nov 14!");
+    });
+  }
+
+  const btnNotify = document.getElementById("btn-notify-fest");
+  if (btnNotify) {
+    btnNotify.addEventListener("click", () => {
+      playHoverBlip();
+      btnNotify.innerHTML = `<span>✅</span><span>Reminder Set!</span>`;
+      btnNotify.classList.add("bg-emerald-950", "text-emerald-300", "border-emerald-600");
+      showLiveActivityToastCustom("🔔 Fest reminder active! You'll be alerted when arenas open.");
+    });
+  }
 
   // Initialize subtle 3D tilt on the timer wrapper
   const timerWrap = document.querySelector(".timer-laser-wrap");
@@ -767,8 +929,8 @@ function startFestCountdown() {
       max: 8,
       speed: 400,
       glare: true,
-      "max-glare": 0.22,
-      perspective: 1000
+      "max-glare": 0.2,
+      perspective: 1000,
     });
   }
 }
