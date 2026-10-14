@@ -159,6 +159,33 @@ function getEventFeatureBadge(event) {
   return `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">✨ ${event.category}</span>`;
 }
 
+function getCardRunningTicker(event) {
+  const cat = (event.category || "").toLowerCase();
+  let items = [];
+
+  if (cat === "technical") {
+    items = ["⚡ HACKATHON ARENA", "LIVE CODING", "CASH PRIZES", "CERTIFICATE OF MERIT", "CAMPUS AUDITORIUM"];
+  } else if (cat === "gaming") {
+    items = ["🎮 60 FPS ESPORTS", "VALORANT SHOWDOWN", "SQUAD CUP", "STREAMED LIVE", "CHAMPIONSHIP TROPHY"];
+  } else if (cat === "cultural") {
+    items = ["🎸 MAIN STAGE", "SOUND & LIGHT ARENA", "LIVE AUDIENCE", "MEDALS & AWARDS", "CERTIFICATES"];
+  } else if (cat === "sports") {
+    items = ["⚽ TURF CUP", "ROLLING TROPHY", "LIVE COMMENTARY", "SPORTS KITS", "REFRESHMENTS"];
+  } else {
+    items = ["💡 HANDS-ON LAB", "INDUSTRY MENTORS", "PORTFOLIO PROJECT", "VERIFIED CERTIFICATE", "FREE KIT"];
+  }
+
+  const tickerText = items.join(" • ") + " • ";
+  return `
+    <div class="card-mini-ticker-wrap py-1 px-2 my-2.5 rounded-lg bg-slate-900/90 border border-slate-700/60 select-none">
+      <div class="card-mini-ticker inline-flex text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-cyan-300">
+        <span class="pr-6">${tickerText}</span>
+        <span class="pr-6">${tickerText}</span>
+      </div>
+    </div>
+  `;
+}
+
 // -------------------------------------------------------------
 // Fetch and Render Events
 // -------------------------------------------------------------
@@ -233,24 +260,33 @@ function renderEventsGrid(events) {
       : "bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-400";
 
     const featureBadge = getEventFeatureBadge(event);
+    const miniTicker = getCardRunningTicker(event);
 
     card.innerHTML = `
       <div>
         <div class="flex items-start justify-between gap-3 mb-3">
-          <div class="flex items-center gap-2.5">
-            <span class="text-3xl p-2.5 rounded-xl bg-slate-750/90 border border-slate-700/60 ${iconAnim} group-hover:scale-110 transition-transform select-none inline-block shadow-inner">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="text-3xl p-2.5 rounded-xl bg-slate-750/90 border border-slate-700/60 ${iconAnim} group-hover:scale-110 transition-transform select-none inline-block shadow-inner flex-shrink-0">
               ${event.icon || "✨"}
             </span>
-            <div>
+            <div class="overflow-hidden w-36 sm:w-44 md:w-48 lg:w-52">
               <span class="inline-block text-[11px] font-bold px-2 py-0.5 rounded-full border ${categoryBadgeClass}">
                 ${event.category}
               </span>
-              <h3 class="text-lg font-bold text-white group-hover:text-purple-300 transition-colors line-clamp-1 mt-0.5">
-                ${event.title}
-              </h3>
+              <!-- Running Marquee Card Header Title -->
+              <div class="card-title-track mt-0.5">
+                <div class="card-title-ticker inline-flex">
+                  <h3 class="text-base sm:text-lg font-bold text-white group-hover:text-purple-300 transition-colors pr-6 whitespace-nowrap">
+                    ${event.title}
+                  </h3>
+                  <h3 class="text-base sm:text-lg font-bold text-white group-hover:text-purple-300 transition-colors pr-6 whitespace-nowrap">
+                    ${event.title}
+                  </h3>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="flex flex-col items-end gap-1">
+          <div class="flex flex-col items-end gap-1 flex-shrink-0">
             ${
               isFull
                 ? `<span class="px-2 py-0.5 text-xs font-black uppercase rounded bg-rose-950 text-rose-300 border border-rose-800 animate-pulse">FULL</span>`
@@ -260,9 +296,12 @@ function renderEventsGrid(events) {
           </div>
         </div>
 
-        <p class="text-xs text-slate-300 line-clamp-2 mb-4 leading-relaxed">
+        <p class="text-xs text-slate-300 line-clamp-2 mb-2 leading-relaxed">
           ${event.description || "No description provided."}
         </p>
+
+        <!-- Running Mini Ticker Tape On Card -->
+        ${miniTicker}
 
         <div class="space-y-2 text-xs text-slate-300 pt-3 border-t border-slate-700/60 mb-5">
           <div class="flex items-center gap-2">

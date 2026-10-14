@@ -340,6 +340,63 @@
       transform: skewX(-20deg);
       animation: buttonSweep 0.8s ease-out;
     }
+
+    /* Running Marquee Text on Cards and Header */
+    @keyframes titleMarquee {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    .card-title-track {
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      position: relative;
+      mask-image: linear-gradient(90deg, transparent 0%, black 5%, black 95%, transparent 100%);
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 5%, black 95%, transparent 100%);
+    }
+    .card-title-ticker {
+      display: inline-flex;
+      white-space: nowrap;
+      animation: titleMarquee 8s linear infinite;
+    }
+    .group:hover .card-title-ticker,
+    .card-title-ticker:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes miniTickerScroll {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    .card-mini-ticker-wrap {
+      overflow: hidden;
+      white-space: nowrap;
+      mask-image: linear-gradient(90deg, transparent 0%, black 4%, black 96%, transparent 100%);
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 4%, black 96%, transparent 100%);
+    }
+    .card-mini-ticker {
+      display: inline-flex;
+      white-space: nowrap;
+      animation: miniTickerScroll 11s linear infinite;
+    }
+    .group:hover .card-mini-ticker,
+    .card-mini-ticker:hover {
+      animation-play-state: paused;
+    }
+
+    /* Grand Fest Marquee Ticker Above Events Grid */
+    @keyframes grandTickerScroll {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    .grand-fest-ticker {
+      display: inline-flex;
+      white-space: nowrap;
+      animation: grandTickerScroll 26s linear infinite;
+    }
+    .grand-fest-ticker:hover {
+      animation-play-state: paused;
+    }
   </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-purple-500 selection:text-white">
@@ -558,6 +615,34 @@
       </div>
     </div>
   </section>
+ 
+  <!-- Grand Running Fest Marquee Ticker Tape -->
+  <div class="w-full overflow-hidden bg-gradient-to-r from-purple-950 via-slate-900 to-purple-950 border-y border-purple-800/40 py-2.5 select-none relative shadow-md">
+    <div class="grand-fest-ticker inline-flex text-xs sm:text-sm font-extrabold uppercase tracking-wider text-purple-200">
+      <span class="pr-8 flex items-center gap-3">
+        <span class="text-amber-400">🔥 HSB FEST 2026</span> ✦
+        <span class="text-cyan-400">15 PREMIER COMPETITIONS</span> ✦
+        <span class="text-pink-400">ROBO RACE 2.0</span> ✦
+        <span class="text-rose-400">VALORANT CLASH</span> ✦
+        <span class="text-purple-300">BATTLE OF THE BANDS</span> ✦
+        <span class="text-emerald-400">5-A-SIDE FOOTBALL</span> ✦
+        <span class="text-amber-300">OVER ₹1,00,000 IN PRIZES</span> ✦
+        <span class="text-cyan-300">CERTIFICATES FOR ALL PARTICIPANTS</span> ✦
+        <span class="text-pink-300">REGISTRATIONS LIVE NOW!</span> ✦
+      </span>
+      <span class="pr-8 flex items-center gap-3">
+        <span class="text-amber-400">🔥 HSB FEST 2026</span> ✦
+        <span class="text-cyan-400">15 PREMIER COMPETITIONS</span> ✦
+        <span class="text-pink-400">ROBO RACE 2.0</span> ✦
+        <span class="text-rose-400">VALORANT CLASH</span> ✦
+        <span class="text-purple-300">BATTLE OF THE BANDS</span> ✦
+        <span class="text-emerald-400">5-A-SIDE FOOTBALL</span> ✦
+        <span class="text-amber-300">OVER ₹1,00,000 IN PRIZES</span> ✦
+        <span class="text-cyan-300">CERTIFICATES FOR ALL PARTICIPANTS</span> ✦
+        <span class="text-pink-300">REGISTRATIONS LIVE NOW!</span> ✦
+      </span>
+    </div>
+  </div>
 
   <!-- Main Content: Filters + Events Grid -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow w-full">
