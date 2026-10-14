@@ -67,6 +67,99 @@
     .animate-pulse-glow {
       animation: pulseGlow 6s ease-in-out infinite;
     }
+    /* Fast Pop-Up / Pop-Out Glowing Wing Badges */
+    @keyframes badgePopCyan {
+      0%, 100% {
+        transform: translateY(0px) scale(0.96) rotate(0deg);
+        box-shadow: 0 4px 14px rgba(6, 182, 212, 0.25);
+        border-color: rgba(6, 182, 212, 0.45);
+      }
+      50% {
+        transform: translateY(-22px) scale(1.10) rotate(3deg);
+        box-shadow: 0 0 25px rgba(6, 182, 212, 0.95), 0 0 45px rgba(6, 182, 212, 0.5);
+        border-color: rgba(34, 211, 238, 1);
+      }
+    }
+    @keyframes badgePopRose {
+      0%, 100% {
+        transform: translateY(0px) scale(0.96) rotate(0deg);
+        box-shadow: 0 4px 14px rgba(244, 63, 94, 0.25);
+        border-color: rgba(244, 63, 94, 0.45);
+      }
+      50% {
+        transform: translateY(-25px) scale(1.11) rotate(-3.5deg);
+        box-shadow: 0 0 25px rgba(244, 63, 94, 0.95), 0 0 45px rgba(244, 63, 94, 0.5);
+        border-color: rgba(251, 113, 133, 1);
+      }
+    }
+    @keyframes badgePopAmber {
+      0%, 100% {
+        transform: translateY(0px) scale(0.95) rotate(0deg);
+        box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25);
+        border-color: rgba(245, 158, 11, 0.45);
+      }
+      50% {
+        transform: translateY(-18px) scale(1.09) rotate(2.5deg);
+        box-shadow: 0 0 25px rgba(245, 158, 11, 0.95), 0 0 45px rgba(245, 158, 11, 0.5);
+        border-color: rgba(252, 211, 77, 1);
+      }
+    }
+    @keyframes badgePopPurple {
+      0%, 100% {
+        transform: translateY(0px) scale(0.96) rotate(0deg);
+        box-shadow: 0 4px 14px rgba(168, 85, 247, 0.25);
+        border-color: rgba(168, 85, 247, 0.45);
+      }
+      50% {
+        transform: translateY(-24px) scale(1.11) rotate(3deg);
+        box-shadow: 0 0 25px rgba(168, 85, 247, 0.95), 0 0 45px rgba(168, 85, 247, 0.5);
+        border-color: rgba(192, 132, 252, 1);
+      }
+    }
+    @keyframes badgePopEmerald {
+      0%, 100% {
+        transform: translateY(0px) scale(0.96) rotate(0deg);
+        box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+        border-color: rgba(16, 185, 129, 0.45);
+      }
+      50% {
+        transform: translateY(-22px) scale(1.10) rotate(-3deg);
+        box-shadow: 0 0 25px rgba(16, 185, 129, 0.95), 0 0 45px rgba(16, 185, 129, 0.5);
+        border-color: rgba(52, 211, 153, 1);
+      }
+    }
+    @keyframes badgePopPink {
+      0%, 100% {
+        transform: translateY(0px) scale(0.95) rotate(0deg);
+        box-shadow: 0 4px 14px rgba(236, 72, 153, 0.25);
+        border-color: rgba(236, 72, 153, 0.45);
+      }
+      50% {
+        transform: translateY(-18px) scale(1.09) rotate(2.5deg);
+        box-shadow: 0 0 25px rgba(236, 72, 153, 0.95), 0 0 45px rgba(236, 72, 153, 0.5);
+        border-color: rgba(244, 114, 182, 1);
+      }
+    }
+
+    .animate-badge-cyan {
+      animation: badgePopCyan 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+    .animate-badge-rose {
+      animation: badgePopRose 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite 0.25s;
+    }
+    .animate-badge-amber {
+      animation: badgePopAmber 2.1s cubic-bezier(0.4, 0, 0.2, 1) infinite 0.5s;
+    }
+    .animate-badge-purple {
+      animation: badgePopPurple 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite 0.15s;
+    }
+    .animate-badge-emerald {
+      animation: badgePopEmerald 2.3s cubic-bezier(0.4, 0, 0.2, 1) infinite 0.4s;
+    }
+    .animate-badge-pink {
+      animation: badgePopPink 2.6s cubic-bezier(0.4, 0, 0.2, 1) infinite 0.65s;
+    }
+
     @keyframes floatItem1 {
       0%, 100% { transform: translateY(0px) rotate(0deg); }
       50% { transform: translateY(-18px) rotate(3deg); }
@@ -79,23 +172,14 @@
       0%, 100% { transform: translateY(0px) rotate(0deg); }
       50% { transform: translateY(-14px) rotate(2deg); }
     }
-    @keyframes shimmerText {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    @keyframes twinkleSparkle {
-      0%, 100% { opacity: 0.2; transform: scale(0.8) rotate(0deg); }
-      50% { opacity: 1; transform: scale(1.25) rotate(15deg); filter: drop-shadow(0 0 6px #f59e0b); }
-    }
     .animate-float-1 {
-      animation: floatItem1 5.5s ease-in-out infinite;
+      animation: floatItem1 3.0s ease-in-out infinite;
     }
     .animate-float-2 {
-      animation: floatItem2 7s ease-in-out infinite;
+      animation: floatItem2 3.4s ease-in-out infinite;
     }
     .animate-float-3 {
-      animation: floatItem3 6.2s ease-in-out infinite;
+      animation: floatItem3 2.8s ease-in-out infinite;
     }
     .animate-shimmer-title {
       background-size: 200% auto;
@@ -596,48 +680,48 @@
 
     <!-- Floating Fest Wing Badges (Left Side) - Visible on tablet & desktop -->
     <div class="hidden md:block absolute left-4 lg:left-12 xl:left-20 top-12 z-20 pointer-events-none select-none space-y-4">
-      <div class="animate-float-1 flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-slate-850/90 backdrop-blur-md border border-cyan-500/50 shadow-xl shadow-cyan-950/70 hover:scale-105 transition-transform pointer-events-auto cursor-default">
-        <span class="text-2xl">🤖</span>
+      <div class="animate-badge-cyan flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-slate-850/95 backdrop-blur-md border border-cyan-500/50 shadow-xl pointer-events-auto cursor-pointer transition-all hover:scale-115 hover:z-30" title="Technical Arena - Robo Race 2.0">
+        <span class="text-2xl animate-bounce" style="animation-duration: 2.2s;">🤖</span>
         <div class="text-left">
           <span class="block text-[9px] font-bold uppercase tracking-wider text-cyan-400">Technical</span>
           <span class="text-xs font-bold text-white">Robo Race 2.0</span>
         </div>
       </div>
 
-      <div class="animate-float-2 ml-5 flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-slate-850/90 backdrop-blur-md border border-rose-500/50 shadow-xl shadow-rose-950/70 hover:scale-105 transition-transform pointer-events-auto cursor-default">
-        <span class="text-2xl">🎮</span>
+      <div class="animate-badge-rose ml-5 flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-slate-850/95 backdrop-blur-md border border-rose-500/50 shadow-xl pointer-events-auto cursor-pointer transition-all hover:scale-115 hover:z-30" title="Gaming Arena - Valorant Clash">
+        <span class="text-2xl animate-pulse">🎮</span>
         <div class="text-left">
           <span class="block text-[9px] font-bold uppercase tracking-wider text-rose-400">Gaming Arena</span>
           <span class="text-xs font-bold text-white">Valorant Clash</span>
         </div>
       </div>
 
-      <div class="animate-float-3 flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-slate-850/90 backdrop-blur-md border border-amber-500/50 shadow-lg shadow-amber-950/70">
-        <span class="text-base">⚡</span>
+      <div class="animate-badge-amber flex items-center gap-2 px-3.5 py-1.5 rounded-2xl bg-slate-850/95 backdrop-blur-md border border-amber-500/50 shadow-lg pointer-events-auto cursor-pointer transition-all hover:scale-115 hover:z-30" title="Live Coding Bootcamp">
+        <span class="text-base animate-bounce" style="animation-duration: 1.8s;">⚡</span>
         <span class="text-xs font-bold text-amber-300">Live Hackathon</span>
       </div>
     </div>
 
     <!-- Floating Fest Wing Badges (Right Side) - Visible on tablet & desktop -->
     <div class="hidden md:block absolute right-4 lg:right-12 xl:right-20 top-12 z-20 pointer-events-none select-none space-y-4">
-      <div class="animate-float-2 flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-slate-850/90 backdrop-blur-md border border-purple-500/50 shadow-xl shadow-purple-950/70 hover:scale-105 transition-transform pointer-events-auto cursor-default">
-        <span class="text-2xl">🎸</span>
+      <div class="animate-badge-purple flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-slate-850/95 backdrop-blur-md border border-purple-500/50 shadow-xl pointer-events-auto cursor-pointer transition-all hover:scale-115 hover:z-30" title="Cultural Stage - Battle of Bands">
+        <span class="text-2xl animate-pulse">🎸</span>
         <div class="text-left">
           <span class="block text-[9px] font-bold uppercase tracking-wider text-purple-400">Cultural</span>
           <span class="text-xs font-bold text-white">Battle of Bands</span>
         </div>
       </div>
 
-      <div class="animate-float-1 mr-5 flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-slate-850/90 backdrop-blur-md border border-emerald-500/50 shadow-xl shadow-emerald-950/70 hover:scale-105 transition-transform pointer-events-auto cursor-default">
-        <span class="text-2xl">⚽</span>
+      <div class="animate-badge-emerald mr-5 flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-slate-850/95 backdrop-blur-md border border-emerald-500/50 shadow-xl pointer-events-auto cursor-pointer transition-all hover:scale-115 hover:z-30" title="Sports Cup - 5-a-Side Football">
+        <span class="text-2xl animate-bounce" style="animation-duration: 2.3s;">⚽</span>
         <div class="text-left">
           <span class="block text-[9px] font-bold uppercase tracking-wider text-emerald-400">Sports League</span>
           <span class="text-xs font-bold text-white">5-a-Side Football</span>
         </div>
       </div>
 
-      <div class="animate-float-3 flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-slate-850/90 backdrop-blur-md border border-pink-500/50 shadow-lg shadow-pink-950/70">
-        <span class="text-base">✨</span>
+      <div class="animate-badge-pink flex items-center gap-2 px-3.5 py-1.5 rounded-2xl bg-slate-850/95 backdrop-blur-md border border-pink-500/50 shadow-lg pointer-events-auto cursor-pointer transition-all hover:scale-115 hover:z-30" title="Dance Fiesta - Stage Clash">
+        <span class="text-base animate-twinkle">✨</span>
         <span class="text-xs font-bold text-pink-300">Dance Fiesta</span>
       </div>
     </div>
