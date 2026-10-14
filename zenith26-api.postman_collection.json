@@ -1,8 +1,8 @@
 {
   "info": {
     "_postman_id": "c1f73b64-89d2-4328-98e2-f472851a7071",
-    "name": "Zenith '26 API",
-    "description": "Comprehensive Postman test collection for Zenith '26 College Fest Management System API endpoints, covering Events, Registrations, Admin stats, and Stretch Goals.",
+    "name": "HSB FEST 2026 API",
+    "description": "Comprehensive Postman test collection for HSB FEST 2026 College Fest Management System API endpoints, covering Events, Registrations, Admin stats, and Stretch Goals.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [

@@ -1,4 +1,4 @@
-# Zenith '26 College Fest Management System 🚀
+# HSB FEST 2026 College Fest Management System 🚀
 
 A complete, full-stack college fest management web application built with **FastAPI**, **SQLite**, **Tailwind CSS**, and **Vanilla JavaScript**, designed for high performance, reliability, and clean API contracts.
 

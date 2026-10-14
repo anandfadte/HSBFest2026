@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 FRONTEND_DIR = BASE_DIR / "frontend"
 
 app = FastAPI(
-    title="Zenith '26 Fest Management System API",
+    title="HSB FEST 2026 Management System API",
     description="API for College Fest Events, Registrations, and Admin Dashboard",
     version="1.0.0",
 )

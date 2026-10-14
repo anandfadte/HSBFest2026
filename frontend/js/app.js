@@ -198,7 +198,7 @@ async function openEventDetails(eventId) {
     modalDate.textContent = event.event_date;
     modalTime.textContent = event.event_time;
     modalVenue.textContent = event.venue;
-    modalDescription.textContent = event.description || "Join us for this exciting event at Zenith '26!";
+    modalDescription.textContent = event.description || "Join us for this exciting event at HSB FEST 2026!";
 
     // Seat availability info
     const isFull = event.available_seats <= 0;
