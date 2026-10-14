@@ -568,6 +568,92 @@
       animation: toastSlideOut 0.3s ease-in forwards;
     }
 
+    /* Flowing Laser Neon Border & Halo for Countdown Timer */
+    @keyframes timerLaserFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .timer-laser-wrap {
+      position: relative;
+      background: linear-gradient(
+        90deg,
+        #06b6d4,
+        #ec4899,
+        #a855f7,
+        #f59e0b,
+        #10b981,
+        #06b6d4
+      );
+      background-size: 300% 300%;
+      animation: timerLaserFlow 4s linear infinite;
+      padding: 2.5px;
+      border-radius: 1.35rem;
+      box-shadow: 0 0 25px rgba(168, 85, 247, 0.45), 0 0 50px rgba(6, 182, 212, 0.3);
+    }
+    .timer-ambient-halo {
+      position: absolute;
+      inset: -15px;
+      background: linear-gradient(
+        90deg,
+        rgba(6, 182, 212, 0.45),
+        rgba(236, 72, 153, 0.45),
+        rgba(168, 85, 247, 0.45),
+        rgba(245, 158, 11, 0.4)
+      );
+      background-size: 300% 300%;
+      animation: timerLaserFlow 4s linear infinite;
+      border-radius: 1.6rem;
+      filter: blur(22px);
+      opacity: 0.85;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* 3D Digit Flip on Countdown Second Tick */
+    @keyframes digitFlipUp {
+      0% {
+        transform: rotateX(0deg) scale(1);
+        opacity: 1;
+      }
+      40% {
+        transform: rotateX(-80deg) scale(0.9);
+        opacity: 0.1;
+      }
+      60% {
+        transform: rotateX(80deg) scale(0.9);
+        opacity: 0.1;
+      }
+      100% {
+        transform: rotateX(0deg) scale(1);
+        opacity: 1;
+      }
+    }
+    .animate-digit-flip {
+      animation: digitFlipUp 0.38s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      transform-origin: center center;
+      display: inline-block;
+    }
+
+    /* Tick Pulse on Seconds Box */
+    @keyframes tickPulseGreen {
+      0% {
+        box-shadow: inset 0 0 0 0 rgba(16, 185, 129, 0);
+        border-color: rgba(16, 185, 129, 0.4);
+      }
+      50% {
+        box-shadow: inset 0 0 12px 2px rgba(16, 185, 129, 0.6), 0 0 16px rgba(16, 185, 129, 0.55);
+        border-color: rgba(52, 211, 153, 1);
+      }
+      100% {
+        box-shadow: inset 0 0 0 0 rgba(16, 185, 129, 0);
+        border-color: rgba(16, 185, 129, 0.4);
+      }
+    }
+    .animate-tick-pulse {
+      animation: tickPulseGreen 0.45s ease-out;
+    }
+
     /* Print Style: Prints clean Holographic Pass only */
     @media print {
       body * {
@@ -803,29 +889,70 @@
         The ultimate college arena of technology, culture, design, gaming, and sports at HSB FEST 2026. Explore 14 premier events and lock in your registrations early!
       </p>
 
-      <!-- Live Fest Countdown Timer -->
-      <div class="inline-flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-center p-3 sm:p-4 rounded-2xl bg-slate-850/80 backdrop-blur border border-purple-800/40 shadow-xl shadow-purple-950/40 hover:border-purple-600/60 transition-all">
-        <div class="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700/60 min-w-[62px] sm:min-w-[70px] flex-col shadow-inner">
-          <span id="timer-days" class="text-xl sm:text-2xl font-black text-purple-300 font-mono tracking-wider">00</span>
-          <span class="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400">Days</span>
-        </div>
-        <span class="text-purple-400 font-bold text-lg hidden sm:inline">:</span>
+      <!-- Live Fest Countdown Timer with Flowing Laser Neon Border & Sci-Fi HUD -->
+      <div class="relative inline-block my-2 text-center select-none">
+        <!-- Ambient Glowing Neon Halo Behind Timer -->
+        <div class="timer-ambient-halo"></div>
 
-        <div class="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700/60 min-w-[62px] sm:min-w-[70px] flex-col shadow-inner">
-          <span id="timer-hours" class="text-xl sm:text-2xl font-black text-pink-300 font-mono tracking-wider">00</span>
-          <span class="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400">Hours</span>
-        </div>
-        <span class="text-purple-400 font-bold text-lg hidden sm:inline">:</span>
+        <!-- Flowing Laser Neon Border Container -->
+        <div class="timer-laser-wrap relative z-10">
+          
+          <!-- Inner Sci-Fi Control Box -->
+          <div class="relative bg-slate-950/95 backdrop-blur-md rounded-[1.2rem] p-3.5 sm:p-5 border border-purple-500/30 shadow-2xl">
+            
+            <!-- Sci-Fi Glowing Corner Brackets -->
+            <span class="absolute -top-1 -left-1 w-3.5 h-3.5 border-t-2 border-l-2 border-cyan-400 drop-shadow-[0_0_8px_#06b6d4] pointer-events-none z-20"></span>
+            <span class="absolute -top-1 -right-1 w-3.5 h-3.5 border-t-2 border-r-2 border-pink-400 drop-shadow-[0_0_8px_#ec4899] pointer-events-none z-20"></span>
+            <span class="absolute -bottom-1 -left-1 w-3.5 h-3.5 border-b-2 border-l-2 border-purple-400 drop-shadow-[0_0_8px_#a855f7] pointer-events-none z-20"></span>
+            <span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 border-b-2 border-r-2 border-amber-400 drop-shadow-[0_0_8px_#f59e0b] pointer-events-none z-20"></span>
 
-        <div class="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700/60 min-w-[62px] sm:min-w-[70px] flex-col shadow-inner">
-          <span id="timer-minutes" class="text-xl sm:text-2xl font-black text-amber-300 font-mono tracking-wider">00</span>
-          <span class="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400">Mins</span>
-        </div>
-        <span class="text-purple-400 font-bold text-lg hidden sm:inline">:</span>
+            <!-- T-Minus Launch Status Badge Header -->
+            <div class="flex items-center justify-between gap-3 mb-3 pb-2.5 border-b border-purple-500/20 px-1 text-left select-none">
+              <div class="flex items-center gap-2">
+                <span class="relative flex h-2.5 w-2.5">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-80"></span>
+                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500 shadow-[0_0_8px_#f43f5e]"></span>
+                </span>
+                <span class="text-[10px] sm:text-xs font-black tracking-widest uppercase bg-gradient-to-r from-rose-400 via-pink-400 to-amber-300 bg-clip-text text-transparent font-mono">
+                  T-MINUS TO FESTIVAL LAUNCH
+                </span>
+              </div>
+              <span class="text-[9px] font-mono font-extrabold text-cyan-300 bg-cyan-950/90 px-2.5 py-0.5 rounded-full border border-cyan-700/60 shadow-[0_0_8px_rgba(6,182,212,0.3)]">
+                ● LIVE SYNC
+              </span>
+            </div>
 
-        <div class="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700/60 min-w-[62px] sm:min-w-[70px] flex-col shadow-inner">
-          <span id="timer-seconds" class="text-xl sm:text-2xl font-black text-emerald-300 font-mono tracking-wider">00</span>
-          <span class="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400">Secs</span>
+            <!-- Countdown Units Row with 3D Flip Digits -->
+            <div class="flex items-center justify-center gap-2 sm:gap-3 text-center">
+              <!-- Days -->
+              <div id="timer-box-days" class="timer-unit-box flex items-center gap-0.5 px-3 py-2 rounded-xl bg-slate-900/90 border border-purple-500/40 min-w-[64px] sm:min-w-[76px] flex-col shadow-inner transition-all">
+                <span id="timer-days" class="text-2xl sm:text-3xl font-black text-purple-300 font-mono tracking-wider drop-shadow-[0_0_10px_rgba(168,85,247,0.7)] inline-block">00</span>
+                <span class="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 tracking-wider">Days</span>
+              </div>
+              <span class="text-purple-400 font-black text-lg animate-pulse select-none">:</span>
+
+              <!-- Hours -->
+              <div id="timer-box-hours" class="timer-unit-box flex items-center gap-0.5 px-3 py-2 rounded-xl bg-slate-900/90 border border-pink-500/40 min-w-[64px] sm:min-w-[76px] flex-col shadow-inner transition-all">
+                <span id="timer-hours" class="text-2xl sm:text-3xl font-black text-pink-300 font-mono tracking-wider drop-shadow-[0_0_10px_rgba(236,72,153,0.7)] inline-block">00</span>
+                <span class="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 tracking-wider">Hours</span>
+              </div>
+              <span class="text-pink-400 font-black text-lg animate-pulse select-none">:</span>
+
+              <!-- Mins -->
+              <div id="timer-box-minutes" class="timer-unit-box flex items-center gap-0.5 px-3 py-2 rounded-xl bg-slate-900/90 border border-amber-500/40 min-w-[64px] sm:min-w-[76px] flex-col shadow-inner transition-all">
+                <span id="timer-minutes" class="text-2xl sm:text-3xl font-black text-amber-300 font-mono tracking-wider drop-shadow-[0_0_10px_rgba(245,158,11,0.7)] inline-block">00</span>
+                <span class="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 tracking-wider">Mins</span>
+              </div>
+              <span class="text-amber-400 font-black text-lg animate-pulse select-none">:</span>
+
+              <!-- Secs with Live Tick Pulse & Flip -->
+              <div id="timer-box-seconds" class="timer-unit-box flex items-center gap-0.5 px-3 py-2 rounded-xl bg-slate-900/90 border border-emerald-500/50 min-w-[64px] sm:min-w-[76px] flex-col shadow-inner transition-all">
+                <span id="timer-seconds" class="text-2xl sm:text-3xl font-black text-emerald-300 font-mono tracking-wider drop-shadow-[0_0_12px_rgba(16,185,129,0.95)] inline-block">00</span>
+                <span class="text-[9px] sm:text-[10px] uppercase font-bold text-emerald-400 tracking-wider">Secs</span>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
 

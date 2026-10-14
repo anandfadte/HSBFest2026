@@ -685,10 +685,31 @@ document.addEventListener("keydown", (e) => {
 });
 
 // -------------------------------------------------------------
-// Live Fest Countdown Timer
+// Live Fest Countdown Timer with 3D Flip Digits & Tick Pulse
 // -------------------------------------------------------------
 function startFestCountdown() {
   const festDate = new Date("2026-11-14T10:00:00").getTime();
+
+  let lastDays = "";
+  let lastHours = "";
+  let lastMinutes = "";
+  let lastSeconds = "";
+
+  function flipDigit(el, newText) {
+    if (!el) return;
+    el.textContent = newText;
+    el.classList.remove("animate-digit-flip");
+    void el.offsetWidth;
+    el.classList.add("animate-digit-flip");
+  }
+
+  function pulseUnitBox(boxId) {
+    const box = document.getElementById(boxId);
+    if (!box) return;
+    box.classList.remove("animate-tick-pulse");
+    void box.offsetWidth;
+    box.classList.add("animate-tick-pulse");
+  }
 
   function updateTimer() {
     const now = new Date().getTime();
@@ -712,14 +733,44 @@ function startFestCountdown() {
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    if (elDays) elDays.textContent = String(days).padStart(2, "0");
-    if (elHours) elHours.textContent = String(hours).padStart(2, "0");
-    if (elMinutes) elMinutes.textContent = String(minutes).padStart(2, "0");
-    if (elSeconds) elSeconds.textContent = String(seconds).padStart(2, "0");
+    const strDays = String(days).padStart(2, "0");
+    const strHours = String(hours).padStart(2, "0");
+    const strMinutes = String(minutes).padStart(2, "0");
+    const strSeconds = String(seconds).padStart(2, "0");
+
+    if (strDays !== lastDays) {
+      flipDigit(elDays, strDays);
+      lastDays = strDays;
+    }
+    if (strHours !== lastHours) {
+      flipDigit(elHours, strHours);
+      lastHours = strHours;
+    }
+    if (strMinutes !== lastMinutes) {
+      flipDigit(elMinutes, strMinutes);
+      lastMinutes = strMinutes;
+    }
+    if (strSeconds !== lastSeconds) {
+      flipDigit(elSeconds, strSeconds);
+      pulseUnitBox("timer-box-seconds");
+      lastSeconds = strSeconds;
+    }
   }
 
   updateTimer();
   setInterval(updateTimer, 1000);
+
+  // Initialize subtle 3D tilt on the timer wrapper
+  const timerWrap = document.querySelector(".timer-laser-wrap");
+  if (timerWrap && typeof VanillaTilt !== "undefined") {
+    VanillaTilt.init(timerWrap, {
+      max: 8,
+      speed: 400,
+      glare: true,
+      "max-glare": 0.22,
+      perspective: 1000
+    });
+  }
 }
 
 // -------------------------------------------------------------
