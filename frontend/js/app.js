@@ -60,6 +60,23 @@ function getCategoryBadgeClass(category) {
   }
 }
 
+function getCategoryGlowClass(category) {
+  switch (category?.toLowerCase()) {
+    case "technical":
+      return "hover:border-cyan-400/80 hover:shadow-cyan-950/50";
+    case "cultural":
+      return "hover:border-pink-400/80 hover:shadow-pink-950/50";
+    case "sports":
+      return "hover:border-emerald-400/80 hover:shadow-emerald-950/50";
+    case "gaming":
+      return "hover:border-rose-400/80 hover:shadow-rose-950/50";
+    case "workshop":
+      return "hover:border-amber-400/80 hover:shadow-amber-950/50";
+    default:
+      return "hover:border-purple-400/80 hover:shadow-purple-950/50";
+  }
+}
+
 // -------------------------------------------------------------
 // Fetch and Render Events
 // -------------------------------------------------------------
@@ -112,11 +129,13 @@ function renderEventsGrid(events) {
 
   events.forEach((event, index) => {
     const card = document.createElement("div");
+    const categoryGlow = getCategoryGlowClass(event.category);
     card.className =
-      "card-fade bg-slate-800/70 backdrop-blur border border-slate-700/80 rounded-2xl p-5 flex flex-col justify-between hover:border-purple-500/60 hover:shadow-xl hover:shadow-purple-900/20 transition-all duration-200 group";
-    card.style.animationDelay = `${index * 40}ms`;
+      `card-fade bg-slate-800/70 backdrop-blur border border-slate-750/80 rounded-2xl p-5 flex flex-col justify-between ${categoryGlow} hover:shadow-xl hover:-translate-y-1 transition-all duration-200 group`;
+    card.style.animationDelay = `${index * 35}ms`;
 
     const isFull = event.available_seats <= 0;
+    const isFastFilling = !isFull && event.available_seats <= 10;
     const feeText = event.fee > 0 ? `₹${event.fee}` : "Free";
     const categoryBadgeClass = getCategoryBadgeClass(event.category);
 
@@ -160,9 +179,16 @@ function renderEventsGrid(events) {
           </div>
           <div class="flex items-center justify-between pt-1 text-slate-300 font-medium">
             <span>Seats:</span>
-            <span class="${isFull ? 'text-rose-400 font-bold' : 'text-emerald-400 font-bold'}">
-              ${event.available_seats} / ${event.capacity} left
-            </span>
+            <div class="flex items-center gap-1.5">
+              ${
+                isFastFilling
+                  ? `<span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-800 animate-pulse">🔥 Filling Fast</span>`
+                  : ""
+              }
+              <span class="${isFull ? 'text-rose-400 font-bold' : isFastFilling ? 'text-amber-400 font-bold' : 'text-emerald-400 font-bold'}">
+                ${event.available_seats} / ${event.capacity} left
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -330,13 +356,18 @@ registrationForm.addEventListener("submit", async (e) => {
         "success",
         `🎉 Registration Confirmed! ${data.student_name} is registered for ${modalTitle.textContent}.`
       );
+
+      // Trigger Confetti explosion and celebration audio fanfare
+      fireFestConfetti();
+      playCelebrationFanfare();
+
       // Re-fetch events list to update seat count live on cards
       fetchEvents();
 
       // Automatically close modal after brief moment so user can see success
       setTimeout(() => {
         closeModal();
-      }, 2000);
+      }, 2500);
     } else {
       // Show exact server error message (e.g. "Event is full", "Already registered")
       const errMsg = data.detail || "Registration failed. Please check your details.";
@@ -431,5 +462,206 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-// Initial Load
-document.addEventListener("DOMContentLoaded", fetchEvents);
+// -------------------------------------------------------------
+// Live Fest Countdown Timer
+// -------------------------------------------------------------
+function startFestCountdown() {
+  const festDate = new Date("2026-11-14T10:00:00").getTime();
+
+  function updateTimer() {
+    const now = new Date().getTime();
+    const distance = festDate - now;
+
+    const elDays = document.getElementById("timer-days");
+    const elHours = document.getElementById("timer-hours");
+    const elMinutes = document.getElementById("timer-minutes");
+    const elSeconds = document.getElementById("timer-seconds");
+
+    if (distance <= 0) {
+      if (elDays) elDays.textContent = "00";
+      if (elHours) elHours.textContent = "00";
+      if (elMinutes) elMinutes.textContent = "00";
+      if (elSeconds) elSeconds.textContent = "00";
+      return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    if (elDays) elDays.textContent = String(days).padStart(2, "0");
+    if (elHours) elHours.textContent = String(hours).padStart(2, "0");
+    if (elMinutes) elMinutes.textContent = String(minutes).padStart(2, "0");
+    if (elSeconds) elSeconds.textContent = String(seconds).padStart(2, "0");
+  }
+
+  updateTimer();
+  setInterval(updateTimer, 1000);
+}
+
+// -------------------------------------------------------------
+// Confetti Burst Helper
+// -------------------------------------------------------------
+function fireFestConfetti() {
+  if (typeof confetti === "function") {
+    confetti({
+      particleCount: 75,
+      angle: 60,
+      spread: 60,
+      origin: { x: 0.1, y: 0.65 },
+      colors: ["#a855f7", "#ec4899", "#f59e0b", "#10b981", "#38bdf8"],
+    });
+    confetti({
+      particleCount: 75,
+      angle: 120,
+      spread: 60,
+      origin: { x: 0.9, y: 0.65 },
+      colors: ["#a855f7", "#ec4899", "#f59e0b", "#10b981", "#38bdf8"],
+    });
+  }
+}
+
+// -------------------------------------------------------------
+// Web Audio API Synthesizer (Native browser sound, zero files)
+// -------------------------------------------------------------
+let audioCtx = null;
+let festBeatsOscillators = [];
+let isFestAudioPlaying = false;
+
+function getAudioContext() {
+  if (!audioCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (AudioContextClass) {
+      audioCtx = new AudioContextClass();
+    }
+  }
+  if (audioCtx && audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+// Celebration Fanfare chime on registration (C5 - E5 - G5 - C6)
+function playCelebrationFanfare() {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    const notes = [523.25, 659.25, 783.99, 1046.5];
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.12);
+
+      gain.gain.setValueAtTime(0, ctx.currentTime + idx * 0.12);
+      gain.gain.linearRampToValueAtTime(0.25, ctx.currentTime + idx * 0.12 + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.12 + 0.6);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(ctx.currentTime + idx * 0.12);
+      osc.stop(ctx.currentTime + idx * 0.12 + 0.65);
+    });
+  } catch (e) {
+    console.warn("Audio not allowed yet by browser", e);
+  }
+}
+
+// Upbeat 6-Second Electronic Fest Synth Groove
+function toggleFestAudio() {
+  if (isFestAudioPlaying) {
+    stopFestAudio();
+    return;
+  }
+
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    isFestAudioPlaying = true;
+    const btn = document.getElementById("fest-audio-btn");
+    const icon = document.getElementById("audio-icon");
+    const label = document.getElementById("audio-label");
+
+    if (icon) icon.textContent = "🔊";
+    if (label) label.textContent = "Playing Vibe...";
+    if (btn) btn.classList.add("bg-purple-600", "text-white", "animate-pulse");
+
+    const melody = [
+      { freq: 440.0, time: 0.0, dur: 0.2 },
+      { freq: 523.25, time: 0.25, dur: 0.2 },
+      { freq: 659.25, time: 0.5, dur: 0.35 },
+      { freq: 587.33, time: 0.9, dur: 0.2 },
+      { freq: 523.25, time: 1.15, dur: 0.2 },
+      { freq: 440.0, time: 1.4, dur: 0.4 },
+      { freq: 392.0, time: 1.9, dur: 0.25 },
+      { freq: 440.0, time: 2.2, dur: 0.2 },
+      { freq: 523.25, time: 2.45, dur: 0.2 },
+      { freq: 659.25, time: 2.7, dur: 0.35 },
+      { freq: 783.99, time: 3.15, dur: 0.45 },
+      { freq: 659.25, time: 3.65, dur: 0.3 },
+      { freq: 523.25, time: 4.0, dur: 0.4 },
+      { freq: 587.33, time: 4.5, dur: 0.5 },
+      { freq: 523.25, time: 5.1, dur: 0.8 },
+    ];
+
+    melody.forEach((note) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(note.freq, ctx.currentTime + note.time);
+
+      gain.gain.setValueAtTime(0, ctx.currentTime + note.time);
+      gain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + note.time + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + note.time + note.dur);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(ctx.currentTime + note.time);
+      osc.stop(ctx.currentTime + note.time + note.dur);
+
+      festBeatsOscillators.push(osc);
+    });
+
+    setTimeout(() => {
+      stopFestAudio();
+    }, 6200);
+  } catch (e) {
+    console.error("Audio error:", e);
+    stopFestAudio();
+  }
+}
+
+function stopFestAudio() {
+  isFestAudioPlaying = false;
+  festBeatsOscillators.forEach((osc) => {
+    try {
+      osc.stop();
+    } catch (e) {}
+  });
+  festBeatsOscillators = [];
+
+  const btn = document.getElementById("fest-audio-btn");
+  const icon = document.getElementById("audio-icon");
+  const label = document.getElementById("audio-label");
+  if (icon) icon.textContent = "🎵";
+  if (label) label.textContent = "Play Vibe";
+  if (btn) btn.classList.remove("bg-purple-600", "text-white", "animate-pulse");
+}
+
+// Initial Boot
+document.addEventListener("DOMContentLoaded", () => {
+  fetchEvents();
+  startFestCountdown();
+
+  const audioBtn = document.getElementById("fest-audio-btn");
+  if (audioBtn) {
+    audioBtn.addEventListener("click", toggleFestAudio);
+  }
+});
