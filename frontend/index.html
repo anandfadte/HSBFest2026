@@ -703,6 +703,102 @@
       transform-origin: 50% 50%;
     }
 
+    /* Stat Cards Flowing Laser Neon Border, Halo & Staggered Waves */
+    @keyframes statLaserRotate {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .stat-laser-wrap {
+      position: relative;
+      padding: 2px;
+      border-radius: 1.15rem;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+      cursor: pointer;
+    }
+    .stat-laser-amber {
+      background: linear-gradient(135deg, #f59e0b, #fbbf24, #d97706, #fde68a, #f59e0b);
+      background-size: 300% 300%;
+      animation: statLaserRotate 4s ease infinite;
+    }
+    .stat-laser-purple {
+      background: linear-gradient(135deg, #ec4899, #c084fc, #a855f7, #f472b6, #ec4899);
+      background-size: 300% 300%;
+      animation: statLaserRotate 4s ease infinite;
+    }
+    .stat-laser-cyan {
+      background: linear-gradient(135deg, #06b6d4, #38bdf8, #2563eb, #67e8f9, #06b6d4);
+      background-size: 300% 300%;
+      animation: statLaserRotate 4s ease infinite;
+    }
+    .stat-laser-emerald {
+      background: linear-gradient(135deg, #10b981, #34d399, #059669, #6ee7b7, #10b981);
+      background-size: 300% 300%;
+      animation: statLaserRotate 4s ease infinite;
+    }
+
+    .stat-halo-amber {
+      box-shadow: 0 0 16px rgba(245, 158, 11, 0.22);
+    }
+    .stat-halo-purple {
+      box-shadow: 0 0 16px rgba(236, 72, 153, 0.22);
+    }
+    .stat-halo-cyan {
+      box-shadow: 0 0 16px rgba(6, 182, 212, 0.22);
+    }
+    .stat-halo-emerald {
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.22);
+    }
+
+    .stat-halo-amber:hover {
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.55), 0 0 45px rgba(245, 158, 11, 0.25);
+    }
+    .stat-halo-purple:hover {
+      box-shadow: 0 0 25px rgba(236, 72, 153, 0.55), 0 0 45px rgba(168, 85, 247, 0.3);
+    }
+    .stat-halo-cyan:hover {
+      box-shadow: 0 0 25px rgba(6, 182, 212, 0.55), 0 0 45px rgba(56, 189, 248, 0.3);
+    }
+    .stat-halo-emerald:hover {
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.55), 0 0 45px rgba(52, 211, 153, 0.3);
+    }
+
+    /* Staggered Anti-Gravity Floating Keyframe Animations */
+    @keyframes statFloatBob {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+    .stat-float-1 {
+      animation: statFloatBob 3.8s ease-in-out infinite;
+      animation-delay: 0s;
+    }
+    .stat-float-2 {
+      animation: statFloatBob 3.8s ease-in-out infinite;
+      animation-delay: 0.9s;
+    }
+    .stat-float-3 {
+      animation: statFloatBob 3.8s ease-in-out infinite;
+      animation-delay: 1.8s;
+    }
+    .stat-float-4 {
+      animation: statFloatBob 3.8s ease-in-out infinite;
+      animation-delay: 2.7s;
+    }
+
+    /* Sparkle pop on count completion */
+    @keyframes statSparklePop {
+      0% { transform: scale(0.92); opacity: 0.8; }
+      50% { transform: scale(1.15); filter: brightness(1.35); }
+      100% { transform: scale(1); opacity: 1; filter: brightness(1); }
+    }
+    .stat-sparkle-pop {
+      animation: statSparklePop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
     /* Print Style: Prints clean Holographic Pass only */
     @media print {
       body * {
@@ -1098,24 +1194,117 @@
         </div>
       </div>
 
-      <!-- Live Fest Stat Roll-Up Showcase Strip (Slot Machine Count-Up) -->
+      <!-- Live Fest Stat Roll-Up Showcase Strip (Slot Machine Count-Up & Interactive Sci-Fi Hub) -->
       <div class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5 max-w-2xl mx-auto select-none">
-        <div class="p-3 rounded-2xl bg-slate-850/85 backdrop-blur-md border border-amber-500/30 shadow-lg text-center hover:border-amber-400 hover:shadow-amber-950/60 transition-all hover:scale-105 group">
-          <div class="text-lg sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-200 stat-counter font-mono" data-target="150000" data-prefix="₹" data-suffix="+">₹0</div>
-          <div class="text-[9px] sm:text-[11px] font-bold text-amber-300/80 uppercase tracking-wider mt-0.5">Prize Pool</div>
+        
+        <!-- Stat Card 1: Prize Pool -->
+        <div id="stat-card-prize" class="stat-laser-wrap stat-laser-amber stat-halo-amber stat-float-1 group" title="Click to view Prize Pool breakdown!">
+          <div class="relative p-3 rounded-[1.05rem] bg-slate-900/95 backdrop-blur-md text-center h-full flex flex-col justify-between overflow-hidden">
+            <!-- Micro Sci-Fi Corner Brackets -->
+            <span class="absolute top-1 left-1 w-2 h-2 border-t-2 border-l-2 border-amber-400 drop-shadow-[0_0_4px_#f59e0b] pointer-events-none"></span>
+            <span class="absolute top-1 right-1 w-2 h-2 border-t-2 border-r-2 border-amber-400 drop-shadow-[0_0_4px_#f59e0b] pointer-events-none"></span>
+            
+            <!-- Watermark Icon in background -->
+            <div class="absolute -right-2 -bottom-2 text-3xl sm:text-4xl opacity-15 group-hover:opacity-30 transition-all select-none pointer-events-none">🏆</div>
+            
+            <!-- Live Micro-Status Pill -->
+            <div class="flex items-center justify-center gap-1 mb-1">
+              <span class="relative flex h-1.5 w-1.5">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-400"></span>
+              </span>
+              <span class="text-[8px] font-mono font-bold tracking-widest text-amber-300 uppercase">CASH POOL</span>
+            </div>
+
+            <div class="text-lg sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-200 stat-counter font-mono relative z-10" data-target="150000" data-prefix="₹" data-suffix="+">₹0</div>
+            <div class="text-[9px] sm:text-[11px] font-bold text-amber-300/80 uppercase tracking-wider mt-0.5 relative z-10 flex items-center justify-center gap-1">
+              <span>Prize Pool</span>
+              <span class="text-[9px] opacity-0 group-hover:opacity-100 transition-opacity">ℹ️</span>
+            </div>
+          </div>
         </div>
-        <div class="p-3 rounded-2xl bg-slate-850/85 backdrop-blur-md border border-purple-500/30 shadow-lg text-center hover:border-purple-400 hover:shadow-purple-950/60 transition-all hover:scale-105 group">
-          <div class="text-lg sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-pink-400 to-rose-300 stat-counter font-mono" data-target="1500" data-suffix="+">0</div>
-          <div class="text-[9px] sm:text-[11px] font-bold text-purple-300/80 uppercase tracking-wider mt-0.5">Students Joining</div>
+
+        <!-- Stat Card 2: Students Joining -->
+        <div id="stat-card-students" class="stat-laser-wrap stat-laser-purple stat-halo-purple stat-float-2 group" title="Click to view student registration info!">
+          <div class="relative p-3 rounded-[1.05rem] bg-slate-900/95 backdrop-blur-md text-center h-full flex flex-col justify-between overflow-hidden">
+            <!-- Micro Sci-Fi Corner Brackets -->
+            <span class="absolute top-1 left-1 w-2 h-2 border-t-2 border-l-2 border-pink-400 drop-shadow-[0_0_4px_#ec4899] pointer-events-none"></span>
+            <span class="absolute top-1 right-1 w-2 h-2 border-t-2 border-r-2 border-pink-400 drop-shadow-[0_0_4px_#ec4899] pointer-events-none"></span>
+            
+            <!-- Watermark Icon in background -->
+            <div class="absolute -right-2 -bottom-2 text-3xl sm:text-4xl opacity-15 group-hover:opacity-30 transition-all select-none pointer-events-none">👥</div>
+
+            <!-- Live Micro-Status Pill -->
+            <div class="flex items-center justify-center gap-1 mb-1">
+              <span class="relative flex h-1.5 w-1.5">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-pink-400"></span>
+              </span>
+              <span class="text-[8px] font-mono font-bold tracking-widest text-pink-300 uppercase">LIVE ENROLL</span>
+            </div>
+
+            <div class="text-lg sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-pink-400 to-rose-300 stat-counter font-mono relative z-10" data-target="1500" data-suffix="+">0</div>
+            <div class="text-[9px] sm:text-[11px] font-bold text-purple-300/80 uppercase tracking-wider mt-0.5 relative z-10 flex items-center justify-center gap-1">
+              <span>Students Joining</span>
+              <span class="text-[9px] opacity-0 group-hover:opacity-100 transition-opacity">🚀</span>
+            </div>
+          </div>
         </div>
-        <div class="p-3 rounded-2xl bg-slate-850/85 backdrop-blur-md border border-cyan-500/30 shadow-lg text-center hover:border-cyan-400 hover:shadow-cyan-950/60 transition-all hover:scale-105 group">
-          <div class="text-lg sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-400 to-blue-400 stat-counter font-mono" data-target="15" data-suffix=" Arenas">0</div>
-          <div class="text-[9px] sm:text-[11px] font-bold text-cyan-300/80 uppercase tracking-wider mt-0.5">Battle Events</div>
+
+        <!-- Stat Card 3: Battle Events -->
+        <div id="stat-card-events" class="stat-laser-wrap stat-laser-cyan stat-halo-cyan stat-float-3 group" title="Click to view all Battle Events!">
+          <div class="relative p-3 rounded-[1.05rem] bg-slate-900/95 backdrop-blur-md text-center h-full flex flex-col justify-between overflow-hidden">
+            <!-- Micro Sci-Fi Corner Brackets -->
+            <span class="absolute top-1 left-1 w-2 h-2 border-t-2 border-l-2 border-cyan-400 drop-shadow-[0_0_4px_#06b6d4] pointer-events-none"></span>
+            <span class="absolute top-1 right-1 w-2 h-2 border-t-2 border-r-2 border-cyan-400 drop-shadow-[0_0_4px_#06b6d4] pointer-events-none"></span>
+            
+            <!-- Watermark Icon in background -->
+            <div class="absolute -right-2 -bottom-2 text-3xl sm:text-4xl opacity-15 group-hover:opacity-30 transition-all select-none pointer-events-none">⚔️</div>
+
+            <!-- Live Micro-Status Pill -->
+            <div class="flex items-center justify-center gap-1 mb-1">
+              <span class="relative flex h-1.5 w-1.5">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-cyan-400"></span>
+              </span>
+              <span class="text-[8px] font-mono font-bold tracking-widest text-cyan-300 uppercase">CONTEST HUBS</span>
+            </div>
+
+            <div class="text-lg sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-400 to-blue-400 stat-counter font-mono relative z-10" data-target="15" data-suffix=" Arenas">0</div>
+            <div class="text-[9px] sm:text-[11px] font-bold text-cyan-300/80 uppercase tracking-wider mt-0.5 relative z-10 flex items-center justify-center gap-1">
+              <span>Battle Events</span>
+              <span class="text-[9px] opacity-0 group-hover:opacity-100 transition-opacity">↓</span>
+            </div>
+          </div>
         </div>
-        <div class="p-3 rounded-2xl bg-slate-850/85 backdrop-blur-md border border-emerald-500/30 shadow-lg text-center hover:border-emerald-400 hover:shadow-emerald-950/60 transition-all hover:scale-105 group">
-          <div class="text-lg sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-teal-300 to-green-400 stat-counter font-mono" data-target="5" data-suffix=" Mega Zones">0</div>
-          <div class="text-[9px] sm:text-[11px] font-bold text-emerald-300/80 uppercase tracking-wider mt-0.5">Fest Categories</div>
+
+        <!-- Stat Card 4: Fest Categories -->
+        <div id="stat-card-categories" class="stat-laser-wrap stat-laser-emerald stat-halo-emerald stat-float-4 group" title="Click to spotlight Fest Categories!">
+          <div class="relative p-3 rounded-[1.05rem] bg-slate-900/95 backdrop-blur-md text-center h-full flex flex-col justify-between overflow-hidden">
+            <!-- Micro Sci-Fi Corner Brackets -->
+            <span class="absolute top-1 left-1 w-2 h-2 border-t-2 border-l-2 border-emerald-400 drop-shadow-[0_0_4px_#10b981] pointer-events-none"></span>
+            <span class="absolute top-1 right-1 w-2 h-2 border-t-2 border-r-2 border-emerald-400 drop-shadow-[0_0_4px_#10b981] pointer-events-none"></span>
+            
+            <!-- Watermark Icon in background -->
+            <div class="absolute -right-2 -bottom-2 text-3xl sm:text-4xl opacity-15 group-hover:opacity-30 transition-all select-none pointer-events-none">🌐</div>
+
+            <!-- Live Micro-Status Pill -->
+            <div class="flex items-center justify-center gap-1 mb-1">
+              <span class="relative flex h-1.5 w-1.5">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400"></span>
+              </span>
+              <span class="text-[8px] font-mono font-bold tracking-widest text-emerald-300 uppercase">MULTI-TRACK</span>
+            </div>
+
+            <div class="text-lg sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-teal-300 to-green-400 stat-counter font-mono relative z-10" data-target="5" data-suffix=" Mega Zones">0</div>
+            <div class="text-[9px] sm:text-[11px] font-bold text-emerald-300/80 uppercase tracking-wider mt-0.5 relative z-10 flex items-center justify-center gap-1">
+              <span>Fest Categories</span>
+              <span class="text-[9px] opacity-0 group-hover:opacity-100 transition-opacity">✨</span>
+            </div>
+          </div>
         </div>
+
       </div>
     </div>
   </section>
@@ -1463,6 +1652,112 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal: Prize Pool Breakdown & Arena Allocation -->
+  <div id="prize-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-200 select-none">
+    <div id="prize-modal-card" class="relative bg-slate-900 border border-amber-500/50 w-full max-w-lg rounded-3xl shadow-[0_0_50px_rgba(245,158,11,0.25)] overflow-hidden transform scale-95 transition-transform duration-200 p-5 sm:p-6 flex flex-col max-h-[90vh]">
+      
+      <!-- Top Cyber Neon Accents -->
+      <span class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-yellow-300 to-amber-500 shadow-[0_0_12px_#f59e0b]"></span>
+      
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between pb-4 border-b border-amber-500/20">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/40 flex items-center justify-center text-2xl shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+            🏆
+          </div>
+          <div>
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="text-[10px] font-mono font-bold tracking-widest uppercase bg-amber-950 text-amber-300 px-2 py-0.5 rounded border border-amber-800/60">
+                OFFICIAL CASH PRIZES
+              </span>
+            </div>
+            <h3 class="text-xl sm:text-2xl font-black text-white tracking-tight">
+              ₹150,000+ Prize Pool
+            </h3>
+          </div>
+        </div>
+        <button id="close-prize-modal-btn" class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition cursor-pointer" title="Close">
+          ✕
+        </button>
+      </div>
+
+      <!-- Scrollable Breakdown Content -->
+      <div class="py-4 space-y-3 overflow-y-auto pr-1">
+        
+        <!-- Category 1 -->
+        <div class="p-3 rounded-2xl bg-slate-850/90 border border-amber-500/20 hover:border-amber-400/50 transition">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+              <span>💻</span> Technical & Innovation Arenas
+            </span>
+            <span class="text-xs font-mono font-extrabold text-amber-400 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-500/30">₹50,000</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-snug">
+            Code Sprint 2.0 (₹20,000) • Robo Race 2.0 (₹15,000) • Web3 Hackathon (₹10,000) • Bug Hunter (₹5,000)
+          </p>
+        </div>
+
+        <!-- Category 2 -->
+        <div class="p-3 rounded-2xl bg-slate-850/90 border border-pink-500/20 hover:border-pink-400/50 transition">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold text-pink-300 flex items-center gap-1.5">
+              <span>🎮</span> Esports & Gaming Battles
+            </span>
+            <span class="text-xs font-mono font-extrabold text-pink-400 bg-pink-950/80 px-2 py-0.5 rounded border border-pink-500/30">₹35,000</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-snug">
+            Valorant Clash (₹18,000) • BGMI Squads (₹12,000) • FIFA 24 Console Cup (₹5,000)
+          </p>
+        </div>
+
+        <!-- Category 3 -->
+        <div class="p-3 rounded-2xl bg-slate-850/90 border border-purple-500/20 hover:border-purple-400/50 transition">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold text-purple-300 flex items-center gap-1.5">
+              <span>🎸</span> Cultural & Mega Stage
+            </span>
+            <span class="text-xs font-mono font-extrabold text-purple-400 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-500/30">₹35,000</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-snug">
+            Battle of the Bands (₹18,000) • Step Up Dance Crew (₹10,000) • Fashion Haute Couture (₹7,000)
+          </p>
+        </div>
+
+        <!-- Category 4 -->
+        <div class="p-3 rounded-2xl bg-slate-850/90 border border-emerald-500/20 hover:border-emerald-400/50 transition">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
+              <span>📊</span> Management, Sports & Design
+            </span>
+            <span class="text-xs font-mono font-extrabold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-500/30">₹30,000</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-snug">
+            Best Manager 2026 (₹12,000) • 5-A-Side Football (₹10,000) • UI/UX Designathon (₹8,000)
+          </p>
+        </div>
+
+        <!-- Guarantee Callout -->
+        <div class="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700/60 text-[10px] text-slate-300 flex items-center gap-2">
+          <span class="text-base">🏅</span>
+          <span>In addition to cash pools: Official Momento Trophies, Gold/Silver Medals & Verified QR-Stamped Certificates for all Top 3 finalists!</span>
+        </div>
+
+      </div>
+
+      <!-- Action Button -->
+      <div class="pt-3 border-t border-amber-500/20 flex gap-2.5">
+        <button
+          id="btn-prize-browse-events"
+          class="flex-1 py-2.5 px-4 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-xs sm:text-sm rounded-xl transition shadow-lg shadow-amber-500/30 flex items-center justify-center gap-2 cursor-pointer"
+        >
+          <span>⚔️</span>
+          <span>Browse All 15 Arenas</span>
+        </button>
+      </div>
+
     </div>
   </div>
 

@@ -1438,16 +1438,21 @@ function initFestParticles() {
 }
 
 // -------------------------------------------------------------
-// Roll-Up Slot Machine Stats Counter
+// Roll-Up Slot Machine Stats Counter & Interactive Sci-Fi Hub
 // -------------------------------------------------------------
 function initStatCounters() {
+  const statWraps = document.querySelectorAll(".stat-laser-wrap");
   const counters = document.querySelectorAll(".stat-counter");
-  counters.forEach((counter) => {
+
+  // Reusable slot machine count animation
+  function rollStatNumber(counter, duration = 1800) {
+    if (!counter) return;
     const target = parseInt(counter.getAttribute("data-target") || "0", 10);
     const prefix = counter.getAttribute("data-prefix") || "";
     const suffix = counter.getAttribute("data-suffix") || "";
-    const duration = 2000;
     const startTime = performance.now();
+
+    counter.classList.remove("stat-sparkle-pop");
 
     function updateCounter(currentTime) {
       const elapsed = currentTime - startTime;
@@ -1462,10 +1467,160 @@ function initStatCounters() {
         requestAnimationFrame(updateCounter);
       } else {
         counter.textContent = `${prefix}${target.toLocaleString()}${suffix}`;
+        counter.classList.add("stat-sparkle-pop");
       }
     }
 
     requestAnimationFrame(updateCounter);
+  }
+
+  // Initial count roll on page load
+  counters.forEach((c) => rollStatNumber(c, 2000));
+
+  // Re-roll on hover with snappy duration
+  statWraps.forEach((wrap) => {
+    let lastHoverTime = 0;
+    wrap.addEventListener("mouseenter", () => {
+      const now = Date.now();
+      if (now - lastHoverTime > 900) {
+        lastHoverTime = now;
+        playHoverBlip();
+        const counter = wrap.querySelector(".stat-counter");
+        if (counter) rollStatNumber(counter, 750);
+      }
+    });
+  });
+
+  // VanillaTilt on Stat Cards
+  if (typeof VanillaTilt !== "undefined") {
+    VanillaTilt.init(statWraps, {
+      max: 10,
+      speed: 350,
+      glare: true,
+      "max-glare": 0.22,
+      scale: 1.05,
+      perspective: 800,
+    });
+  }
+
+  // Card 1: Prize Pool -> Open Breakdown Modal
+  const cardPrize = document.getElementById("stat-card-prize");
+  const prizeModal = document.getElementById("prize-modal");
+  const prizeCard = document.getElementById("prize-modal-card");
+  const closePrizeBtn = document.getElementById("close-prize-modal-btn");
+  const browseFromPrizeBtn = document.getElementById("btn-prize-browse-events");
+
+  function openPrizeModal() {
+    if (!prizeModal || !prizeCard) return;
+    playHoverBlip();
+    prizeModal.classList.remove("hidden");
+    requestAnimationFrame(() => {
+      prizeModal.classList.remove("opacity-0");
+      prizeCard.classList.remove("scale-95");
+      prizeCard.classList.add("scale-100");
+    });
+    if (typeof confetti !== "undefined") {
+      confetti({
+        particleCount: 30,
+        spread: 60,
+        origin: { y: 0.6 },
+        colors: ["#f59e0b", "#fbbf24", "#d97706"],
+      });
+    }
+  }
+
+  function closePrizeModal() {
+    if (!prizeModal || !prizeCard) return;
+    prizeModal.classList.add("opacity-0");
+    prizeCard.classList.remove("scale-100");
+    prizeCard.classList.add("scale-95");
+    setTimeout(() => {
+      prizeModal.classList.add("hidden");
+    }, 200);
+  }
+
+  if (cardPrize) {
+    cardPrize.addEventListener("click", openPrizeModal);
+  }
+  if (closePrizeBtn) {
+    closePrizeBtn.addEventListener("click", closePrizeModal);
+  }
+  if (prizeModal) {
+    prizeModal.addEventListener("click", (e) => {
+      if (e.target === prizeModal) closePrizeModal();
+    });
+  }
+  if (browseFromPrizeBtn) {
+    browseFromPrizeBtn.addEventListener("click", () => {
+      closePrizeModal();
+      const eventsSection = document.getElementById("events");
+      if (eventsSection) {
+        eventsSection.scrollIntoView({ behavior: "smooth" });
+      }
+    });
+  }
+
+  // Card 2: Students Joining -> Celebratory Toast & Mini Confetti
+  const cardStudents = document.getElementById("stat-card-students");
+  if (cardStudents) {
+    cardStudents.addEventListener("click", () => {
+      playHoverBlip();
+      showLiveActivityToastCustom("🎓 1,500+ verified registrations across 28 institutes! Secure your pass now.");
+      if (typeof confetti !== "undefined") {
+        confetti({
+          particleCount: 25,
+          spread: 50,
+          origin: { y: 0.55 },
+          colors: ["#ec4899", "#a855f7", "#c084fc"],
+        });
+      }
+    });
+  }
+
+  // Card 3: Battle Events -> Scroll to Events & Activate "All" Filter
+  const cardEvents = document.getElementById("stat-card-events");
+  if (cardEvents) {
+    cardEvents.addEventListener("click", () => {
+      playHoverBlip();
+      const eventsSection = document.getElementById("events");
+      if (eventsSection) {
+        eventsSection.scrollIntoView({ behavior: "smooth" });
+      }
+      const allFilterBtn = document.querySelector('#category-filters [data-category="All"]');
+      if (allFilterBtn) {
+        allFilterBtn.click();
+      }
+      showLiveActivityToastCustom("⚔️ Showing all 15 Battle Arenas live!");
+    });
+  }
+
+  // Card 4: Fest Categories -> Scroll to Category Filters & Glow Pulse
+  const cardCategories = document.getElementById("stat-card-categories");
+  if (cardCategories) {
+    cardCategories.addEventListener("click", () => {
+      playHoverBlip();
+      const catFilters = document.getElementById("category-filters");
+      if (catFilters) {
+        catFilters.scrollIntoView({ behavior: "smooth", block: "center" });
+        const filterBtns = catFilters.querySelectorAll(".filter-btn");
+        filterBtns.forEach((btn, idx) => {
+          setTimeout(() => {
+            btn.classList.add("ring-2", "ring-cyan-400", "scale-105");
+            setTimeout(() => {
+              btn.classList.remove("ring-2", "ring-cyan-400", "scale-105");
+            }, 600);
+          }, idx * 120);
+        });
+      }
+      showLiveActivityToastCustom("🌐 5 Mega Categories: Technical, Cultural, Sports, Gaming & Workshop.");
+    });
+  }
+
+  // Global ESC key listener to close modals
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && prizeModal && !prizeModal.classList.contains("hidden")) {
+      closePrizeModal();
+    }
   });
 }
 
