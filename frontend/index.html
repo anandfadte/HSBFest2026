@@ -397,6 +397,117 @@
     .grand-fest-ticker:hover {
       animation-play-state: paused;
     }
+
+    /* Card Spotlight Glow Following Mouse Coordinate */
+    .event-card-tilt {
+      position: relative;
+    }
+    .event-card-tilt::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 1rem;
+      background: radial-gradient(350px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), rgba(236, 72, 153, 0.45), rgba(6, 182, 212, 0.35), transparent 70%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 0;
+    }
+    .event-card-tilt:hover::before {
+      opacity: 1;
+    }
+    .event-card-tilt::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 1rem;
+      background: radial-gradient(320px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), rgba(168, 85, 247, 0.14), transparent 75%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 0;
+    }
+    .event-card-tilt:hover::after {
+      opacity: 1;
+    }
+    .event-card-tilt > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Cyberpunk RGB Glitch Effect */
+    @keyframes cyberGlitch {
+      0% { transform: translate(0); text-shadow: none; }
+      20% { transform: translate(-2px, 1.5px); text-shadow: 2px 0 #06b6d4, -2px 0 #ec4899; }
+      40% { transform: translate(-1.5px, -1.5px); text-shadow: -2px 0 #06b6d4, 2px 0 #ec4899; }
+      60% { transform: translate(2px, 1px); text-shadow: 2px 0 #ec4899, -2px 0 #06b6d4; }
+      80% { transform: translate(1px, -1px); text-shadow: -1.5px 0 #38bdf8, 1.5px 0 #f43f5e; }
+      100% { transform: translate(0); text-shadow: none; }
+    }
+    .glitch-text:hover,
+    .cyber-glitch-active {
+      animation: cyberGlitch 0.35s ease-in-out infinite alternate;
+    }
+
+    /* Holographic Digital Pass Sheen */
+    @keyframes holoShimmer {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .pass-holographic-sheen {
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.05) 0%,
+        rgba(6, 182, 212, 0.22) 25%,
+        rgba(236, 72, 153, 0.28) 50%,
+        rgba(245, 158, 11, 0.22) 75%,
+        rgba(255, 255, 255, 0.05) 100%
+      );
+      background-size: 250% 250%;
+      animation: holoShimmer 5s ease infinite;
+    }
+
+    /* Live Activity Toast Entrance/Exit */
+    @keyframes toastSlideIn {
+      from { transform: translateY(120%) scale(0.9); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    @keyframes toastSlideOut {
+      from { transform: translateY(0) scale(1); opacity: 1; }
+      to { transform: translateY(120%) scale(0.9); opacity: 0; }
+    }
+    .toast-enter {
+      animation: toastSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .toast-exit {
+      animation: toastSlideOut 0.3s ease-in forwards;
+    }
+
+    /* Print Style: Prints clean Holographic Pass only */
+    @media print {
+      body * {
+        visibility: hidden !important;
+      }
+      #holographic-pass-container, #holographic-pass-container * {
+        visibility: visible !important;
+      }
+      #holographic-pass-container {
+        position: fixed !important;
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 100% !important;
+        max-width: 500px !important;
+        background: #0f172a !important;
+        color: #fff !important;
+        box-shadow: none !important;
+        border: 2px solid #8b5cf6 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
   </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-purple-500 selection:text-white">
@@ -406,7 +517,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center space-x-3">
         <span class="text-2xl select-none animate-twinkle inline-block">✨</span>
-        <a href="/" class="text-xl font-black tracking-tight bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300 bg-clip-text text-transparent hover:opacity-95 transition">
+        <a href="/" id="fest-logo-link" class="text-xl font-black tracking-tight bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300 bg-clip-text text-transparent hover:opacity-95 transition glitch-text cursor-pointer select-none" title="Click for Cyber Power Zap!">
           HSB FEST 2026
         </a>
         <span class="hidden sm:inline-block text-xs font-semibold px-2 py-0.5 rounded-full bg-purple-900/60 text-purple-300 border border-purple-700/50">
@@ -422,7 +533,27 @@
       </div>
 
       <nav class="flex items-center space-x-2 sm:space-x-3">
-        <!-- Fest Audio Toggle Button with Dancing Equalizer Bars -->
+        <!-- Fest Theme Switcher Pill -->
+        <button
+          id="fest-theme-btn"
+          class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-750 text-slate-300 border border-slate-700 hover:border-pink-500/60 transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+          title="Switch Fest Ambient Neon Mood"
+        >
+          <span id="theme-icon">🎨</span>
+          <span id="theme-label" class="hidden sm:inline">Cyber Neon</span>
+        </button>
+
+        <!-- SFX UI Audio Mute/Unmute Toggle -->
+        <button
+          id="fest-sfx-btn"
+          class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-750 text-slate-300 border border-slate-700 hover:border-cyan-500/60 transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+          title="Toggle UI Sound Effects"
+        >
+          <span id="sfx-icon">🔊</span>
+          <span id="sfx-label" class="hidden sm:inline font-bold">SFX On</span>
+        </button>
+
+        <!-- Fest Audio Synthesizer Music Toggle Button -->
         <button
           id="fest-audio-btn"
           class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-700/60 transition flex items-center gap-2 cursor-pointer shadow-sm shadow-purple-900/30"
@@ -613,6 +744,26 @@
           <span class="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400">Secs</span>
         </div>
       </div>
+
+      <!-- Live Fest Stat Roll-Up Showcase Strip (Slot Machine Count-Up) -->
+      <div class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5 max-w-2xl mx-auto select-none">
+        <div class="p-3 rounded-2xl bg-slate-850/85 backdrop-blur-md border border-amber-500/30 shadow-lg text-center hover:border-amber-400 hover:shadow-amber-950/60 transition-all hover:scale-105 group">
+          <div class="text-lg sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-200 stat-counter font-mono" data-target="150000" data-prefix="₹" data-suffix="+">₹0</div>
+          <div class="text-[9px] sm:text-[11px] font-bold text-amber-300/80 uppercase tracking-wider mt-0.5">Prize Pool</div>
+        </div>
+        <div class="p-3 rounded-2xl bg-slate-850/85 backdrop-blur-md border border-purple-500/30 shadow-lg text-center hover:border-purple-400 hover:shadow-purple-950/60 transition-all hover:scale-105 group">
+          <div class="text-lg sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-pink-400 to-rose-300 stat-counter font-mono" data-target="1500" data-suffix="+">0</div>
+          <div class="text-[9px] sm:text-[11px] font-bold text-purple-300/80 uppercase tracking-wider mt-0.5">Students Joining</div>
+        </div>
+        <div class="p-3 rounded-2xl bg-slate-850/85 backdrop-blur-md border border-cyan-500/30 shadow-lg text-center hover:border-cyan-400 hover:shadow-cyan-950/60 transition-all hover:scale-105 group">
+          <div class="text-lg sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-400 to-blue-400 stat-counter font-mono" data-target="15" data-suffix=" Arenas">0</div>
+          <div class="text-[9px] sm:text-[11px] font-bold text-cyan-300/80 uppercase tracking-wider mt-0.5">Battle Events</div>
+        </div>
+        <div class="p-3 rounded-2xl bg-slate-850/85 backdrop-blur-md border border-emerald-500/30 shadow-lg text-center hover:border-emerald-400 hover:shadow-emerald-950/60 transition-all hover:scale-105 group">
+          <div class="text-lg sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-teal-300 to-green-400 stat-counter font-mono" data-target="5" data-suffix=" Mega Zones">0</div>
+          <div class="text-[9px] sm:text-[11px] font-bold text-emerald-300/80 uppercase tracking-wider mt-0.5">Fest Categories</div>
+        </div>
+      </div>
     </div>
   </section>
  
@@ -790,7 +941,7 @@
         </div>
 
         <!-- Registration Form Section -->
-        <div class="pt-2 border-t border-slate-800">
+        <div id="registration-form-section" class="pt-2 border-t border-slate-800">
           <h3 class="text-base font-bold text-white mb-3 flex items-center gap-2">
             <span>📝</span> Student Registration
           </h3>
@@ -862,16 +1013,111 @@
               <button
                 type="submit"
                 id="submit-register-btn"
-                class="w-full py-2.5 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold text-sm rounded-xl transition duration-150 shadow-lg shadow-purple-600/30 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                class="w-full py-2.5 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold text-sm rounded-xl transition duration-150 shadow-lg shadow-purple-600/30 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed btn-shine-sweep"
               >
                 <span>Register for Event</span>
               </button>
             </div>
           </form>
         </div>
+
+        <!-- Holographic Digital Fest Pass (Shown upon Successful Registration) -->
+        <div id="holographic-pass-section" class="hidden pt-1">
+          <div id="holographic-pass-container" class="relative rounded-2xl p-6 bg-slate-950 border-2 border-purple-500/60 shadow-[0_0_35px_rgba(168,85,247,0.4)] overflow-hidden pass-holographic-sheen text-white select-none">
+            <!-- Background Watermark -->
+            <div class="absolute -right-8 -bottom-8 text-8xl font-black text-purple-500/10 pointer-events-none select-none">
+              HSB
+            </div>
+
+            <!-- Pass Top Header -->
+            <div class="flex items-center justify-between border-b border-purple-500/30 pb-3 mb-4">
+              <div class="flex items-center gap-2">
+                <span class="text-2xl animate-spin" style="animation-duration: 8s;">✨</span>
+                <div>
+                  <h4 class="text-xs font-black tracking-widest uppercase text-purple-300">HSB FEST 2026</h4>
+                  <p class="text-[10px] text-cyan-300 font-mono tracking-wider">OFFICIAL VIP ENTRY PASS</p>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-950/90 text-emerald-300 border border-emerald-500/80 shadow-[0_0_10px_rgba(16,185,129,0.5)]">
+                ● CONFIRMED
+              </span>
+            </div>
+
+            <!-- Pass Main Details Grid -->
+            <div class="space-y-3 mb-4">
+              <div>
+                <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Event Name</span>
+                <h3 id="pass-event-title" class="text-lg sm:text-xl font-black text-white bg-gradient-to-r from-purple-200 via-pink-200 to-amber-200 bg-clip-text text-transparent">
+                  Code Sprint 2.0
+                </h3>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3 text-xs">
+                <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+                  <span class="text-[10px] text-slate-400 uppercase font-bold block">Attendee Name</span>
+                  <span id="pass-student-name" class="font-bold text-cyan-300 truncate block">Aarav Mehta</span>
+                </div>
+                <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+                  <span class="text-[10px] text-slate-400 uppercase font-bold block">Roll Number</span>
+                  <span id="pass-roll-number" class="font-bold text-pink-300 truncate block font-mono">CSE2024001</span>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3 text-xs">
+                <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+                  <span class="text-[10px] text-slate-400 uppercase font-bold block">Venue</span>
+                  <span id="pass-venue" class="font-semibold text-slate-200 truncate block">Campus Auditorium</span>
+                </div>
+                <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+                  <span class="text-[10px] text-slate-400 uppercase font-bold block">Date & Time</span>
+                  <span id="pass-datetime" class="font-semibold text-slate-200 truncate block">Nov 14 • 10:00 AM</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pass Footer with Dynamic Barcode & QR Code Art -->
+            <div class="pt-3 border-t border-purple-500/30 flex items-center justify-between">
+              <div>
+                <span class="text-[9px] uppercase font-mono text-slate-400 block">Pass ID</span>
+                <span id="pass-ticket-id" class="text-xs font-black font-mono text-amber-300">#HSB26-TKT-78291</span>
+                <span class="text-[9px] text-slate-500 block mt-0.5">Bring College ID at Entry Gate</span>
+              </div>
+              <!-- Authentic Styled QR Code SVG Graphic -->
+              <div class="p-1.5 bg-white rounded-lg shadow-md flex items-center justify-center">
+                <svg class="w-12 h-12 text-slate-900" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm14-2h4v2h-4v-2zm-4 0h2v4h-2v-4zm2 4h4v2h-4v-2zm-2 2h2v2h-2v-2zm4 0h2v2h-2v-2zm-8-6h2v2h-2v-2zm0 4h2v2h-2v-2zm4-2h2v2h-2v-2z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pass Action Buttons (Print / Another) -->
+          <div class="mt-4 flex flex-col sm:flex-row gap-3 no-print">
+            <button
+              id="print-pass-btn"
+              onclick="window.print()"
+              class="flex-1 py-2.5 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs sm:text-sm rounded-xl transition shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>📥</span>
+              <span>Download / Print Pass</span>
+            </button>
+            <button
+              id="register-another-btn"
+              class="py-2.5 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs sm:text-sm rounded-xl border border-slate-700 transition flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>🎉 Register Another</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Fullscreen Interactive Cursor Stardust Sparkle Canvas -->
+  <canvas id="cursor-sparkle-canvas" class="fixed inset-0 w-full h-full pointer-events-none z-50"></canvas>
+
+  <!-- Live Dynamic Activity Notification Toast Container (Bottom-Left) -->
+  <div id="live-activity-container" class="fixed bottom-5 left-5 z-40 max-w-sm pointer-events-auto select-none transition-all duration-300"></div>
 
   <!-- Footer -->
   <footer class="border-t border-slate-800 bg-slate-950 py-6 text-center text-xs text-slate-500">

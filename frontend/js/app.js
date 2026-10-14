@@ -344,6 +344,18 @@ function renderEventsGrid(events) {
       </button>
     `;
 
+    // Spotlight cursor illumination tracking on each card
+    card.addEventListener("mousemove", (e) => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+      card.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+    });
+
+    // Cyber UI Audio Blip on Card Hover
+    card.addEventListener("mouseenter", () => {
+      playHoverBlip();
+    });
+
     eventsGrid.appendChild(card);
   });
 
@@ -394,10 +406,15 @@ async function openEventDetails(eventId) {
       submitRegisterBtn.textContent = "Register for Event";
     }
 
-    // Reset Form
+    // Reset Form & Pass Views
     registrationForm.reset();
     clearFormErrors();
     hideFormAlert();
+
+    const formSec = document.getElementById("registration-form-section");
+    const passSec = document.getElementById("holographic-pass-section");
+    if (formSec) formSec.classList.remove("hidden");
+    if (passSec) passSec.classList.add("hidden");
 
     // Show modal with animation
     eventModal.classList.remove("hidden");
@@ -419,6 +436,10 @@ function closeModal() {
     eventModal.classList.add("hidden");
     clearFormErrors();
     hideFormAlert();
+    const formSec = document.getElementById("registration-form-section");
+    const passSec = document.getElementById("holographic-pass-section");
+    if (formSec) formSec.classList.remove("hidden");
+    if (passSec) passSec.classList.add("hidden");
   }, 200);
 }
 
@@ -506,22 +527,53 @@ registrationForm.addEventListener("submit", async (e) => {
     const data = await res.json();
 
     if (res.status === 201) {
-      showFormAlert(
-        "success",
-        `🎉 Registration Confirmed! ${data.student_name} is registered for ${modalTitle.textContent}.`
-      );
+      // Populate Holographic Pass Details
+      const passTitle = document.getElementById("pass-event-title");
+      const passName = document.getElementById("pass-student-name");
+      const passRoll = document.getElementById("pass-roll-number");
+      const passVenue = document.getElementById("pass-venue");
+      const passDatetime = document.getElementById("pass-datetime");
+      const passTicketId = document.getElementById("pass-ticket-id");
 
-      // Trigger Confetti explosion and celebration audio fanfare
+      if (passTitle) passTitle.textContent = modalTitle.textContent;
+      if (passName) passName.textContent = data.student_name || studentName;
+      if (passRoll) passRoll.textContent = data.roll_number || rollNumber;
+      if (passVenue) passVenue.textContent = modalVenue.textContent;
+      if (passDatetime) passDatetime.textContent = `${modalDate.textContent} • ${modalTime.textContent}`;
+      if (passTicketId) {
+        const randId = Math.floor(10000 + Math.random() * 90000);
+        passTicketId.textContent = `#HSB26-TKT-${randId}`;
+      }
+
+      // Transition from form to Holographic Pass
+      const formSection = document.getElementById("registration-form-section");
+      const passSection = document.getElementById("holographic-pass-section");
+
+      if (formSection) formSection.classList.add("hidden");
+      if (passSection) {
+        passSection.classList.remove("hidden");
+        // Initialize 3D tilt with high-intensity holographic glare
+        const passCard = document.getElementById("holographic-pass-container");
+        if (passCard && typeof VanillaTilt !== "undefined") {
+          VanillaTilt.init(passCard, {
+            max: 18,
+            speed: 400,
+            glare: true,
+            "max-glare": 0.45,
+            perspective: 800
+          });
+        }
+      }
+
+      // Trigger Celebration effects
       fireFestConfetti();
       playCelebrationFanfare();
 
-      // Re-fetch events list to update seat count live on cards
+      // Refresh events to sync available seats
       fetchEvents();
 
-      // Automatically close modal after brief moment so user can see success
-      setTimeout(() => {
-        closeModal();
-      }, 2500);
+      submitRegisterBtn.disabled = false;
+      submitRegisterBtn.textContent = originalBtnText;
     } else {
       // Show exact server error message (e.g. "Event is full", "Already registered")
       const errMsg = data.detail || "Registration failed. Please check your details.";
@@ -577,6 +629,7 @@ categoryFilters.addEventListener("click", (e) => {
   btn.classList.add("bg-purple-600", "text-white", "shadow-md", "shadow-purple-600/30");
   btn.classList.remove("bg-slate-800", "text-slate-300", "border", "border-slate-700");
 
+  playFilterWhoosh();
   fetchEvents();
 });
 
@@ -596,8 +649,23 @@ resetFiltersBtn.addEventListener("click", () => {
     }
   });
 
+  playFilterWhoosh();
   fetchEvents();
 });
+
+// Handle "Register Another" in Holographic Pass
+const registerAnotherBtn = document.getElementById("register-another-btn");
+if (registerAnotherBtn) {
+  registerAnotherBtn.addEventListener("click", () => {
+    const formSection = document.getElementById("registration-form-section");
+    const passSection = document.getElementById("holographic-pass-section");
+    if (formSection) formSection.classList.remove("hidden");
+    if (passSection) passSection.classList.add("hidden");
+    registrationForm.reset();
+    clearFormErrors();
+    hideFormAlert();
+  });
+}
 
 retryBtn.addEventListener("click", fetchEvents);
 closeModalBtn.addEventListener("click", closeModal);
@@ -694,6 +762,66 @@ function getAudioContext() {
     audioCtx.resume();
   }
   return audioCtx;
+}
+
+// UI Sound Effects (Zero external audio files, pure Web Audio synthesis)
+let isSfxEnabled = true;
+
+function playHoverBlip() {
+  if (!isSfxEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(650, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(920, ctx.currentTime + 0.045);
+    gain.gain.setValueAtTime(0.035, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.045);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.048);
+  } catch (e) {}
+}
+
+function playFilterWhoosh() {
+  if (!isSfxEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(320, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(640, ctx.currentTime + 0.07);
+    gain.gain.setValueAtTime(0.06, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.075);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.078);
+  } catch (e) {}
+}
+
+function playZapSound() {
+  if (!isSfxEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(920, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(140, ctx.currentTime + 0.22);
+    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.22);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.23);
+  } catch (e) {}
 }
 
 // Celebration Fanfare chime on registration (C5 - E5 - G5 - C6)
@@ -875,6 +1003,48 @@ function startTypewriter() {
 // -------------------------------------------------------------
 // Interactive Cyber Constellation Particles Canvas (High-Luminance Cyber Neon)
 // -------------------------------------------------------------
+// -------------------------------------------------------------
+// Interactive Cyber Constellation Particles Canvas (Multi-Theme Support)
+// -------------------------------------------------------------
+const festThemes = [
+  {
+    name: "Cyber Neon",
+    icon: "🎨",
+    colors: [
+      "rgba(0, 245, 255, ",   // Electric Neon Cyan
+      "rgba(255, 30, 150, ",  // Hot Magenta Pink
+      "rgba(185, 75, 255, ",  // Electric Cyber Violet
+      "rgba(255, 220, 0, ",   // Bright Cyber Gold
+      "rgba(0, 255, 170, ",   // Neon Spring Lime
+    ],
+  },
+  {
+    name: "Golden Glory",
+    icon: "⚡",
+    colors: [
+      "rgba(255, 215, 0, ",   // Cyber Gold
+      "rgba(245, 158, 11, ",  // Warm Amber
+      "rgba(239, 68, 68, ",   // Vivid Crimson
+      "rgba(251, 191, 36, ",  // Sunflower
+      "rgba(255, 255, 255, ", // Brilliant Starlight
+    ],
+  },
+  {
+    name: "Toxic Matrix",
+    icon: "🧪",
+    colors: [
+      "rgba(16, 185, 129, ",  // Matrix Emerald
+      "rgba(0, 255, 170, ",   // Neon Lime
+      "rgba(34, 211, 238, ",  // Cyan
+      "rgba(52, 211, 153, ",  // Mint
+      "rgba(167, 243, 208, ", // Light Mint
+    ],
+  },
+];
+let currentThemeIndex = 0;
+let activeParticleColors = festThemes[0].colors;
+let festParticleSystem = [];
+
 function initFestParticles() {
   const canvas = document.getElementById("fest-particles-canvas");
   const heroSection = document.getElementById("hero-section");
@@ -883,15 +1053,7 @@ function initFestParticles() {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
-  let particles = [];
   const particleCount = 80;
-  const colors = [
-    "rgba(0, 245, 255, ",   // Electric Neon Cyan
-    "rgba(255, 30, 150, ",  // Hot Magenta Pink
-    "rgba(185, 75, 255, ",  // Electric Cyber Violet
-    "rgba(255, 220, 0, ",   // Bright Cyber Gold
-    "rgba(0, 255, 170, ",   // Neon Spring Lime
-  ];
 
   const mouse = {
     x: null,
@@ -940,8 +1102,8 @@ function initFestParticles() {
       this.radius = this.isSuper ? Math.random() * 2.5 + 4.5 : Math.random() * 2.0 + 2.5;
       this.vx = (Math.random() - 0.5) * 0.85;
       this.vy = (Math.random() - 0.5) * 0.85;
-      this.colorIndex = Math.floor(Math.random() * colors.length);
-      this.baseColor = colors[this.colorIndex];
+      this.colorIndex = Math.floor(Math.random() * activeParticleColors.length);
+      this.baseColor = activeParticleColors[this.colorIndex];
       this.alpha = Math.random() * 0.3 + 0.7; // 0.70 to 1.0 (Highly visible!)
       this.pulse = Math.random() * Math.PI * 2;
       this.pulseSpeed = Math.random() * 0.04 + 0.02;
@@ -990,29 +1152,30 @@ function initFestParticles() {
     }
   }
 
+  festParticleSystem = [];
   for (let i = 0; i < particleCount; i++) {
-    particles.push(new Particle());
+    festParticleSystem.push(new Particle());
   }
 
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    for (let i = 0; i < particles.length; i++) {
-      particles[i].update();
-      particles[i].draw();
+    for (let i = 0; i < festParticleSystem.length; i++) {
+      festParticleSystem[i].update();
+      festParticleSystem[i].draw();
 
       // Connect near particles with vivid neon threads
-      for (let j = i + 1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
+      for (let j = i + 1; j < festParticleSystem.length; j++) {
+        const dx = festParticleSystem[i].x - festParticleSystem[j].x;
+        const dy = festParticleSystem[i].y - festParticleSystem[j].y;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
         if (dist < 135) {
           const lineAlpha = (1 - dist / 135) * 0.7; // Bright 0.70 max opacity
           ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = particles[i].baseColor + lineAlpha + ")";
+          ctx.moveTo(festParticleSystem[i].x, festParticleSystem[i].y);
+          ctx.lineTo(festParticleSystem[j].x, festParticleSystem[j].y);
+          ctx.strokeStyle = festParticleSystem[i].baseColor + lineAlpha + ")";
           ctx.lineWidth = 1.4;
           ctx.stroke();
         }
@@ -1020,13 +1183,13 @@ function initFestParticles() {
 
       // Connect nearby particles to mouse cursor with intense glowing laser
       if (mouse.x !== null && mouse.y !== null) {
-        const dx = particles[i].x - mouse.x;
-        const dy = particles[i].y - mouse.y;
+        const dx = festParticleSystem[i].x - mouse.x;
+        const dy = festParticleSystem[i].y - mouse.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < mouse.radius) {
           const mouseLineAlpha = (1 - dist / mouse.radius) * 0.95;
           ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.moveTo(festParticleSystem[i].x, festParticleSystem[i].y);
           ctx.lineTo(mouse.x, mouse.y);
           ctx.strokeStyle = `rgba(0, 245, 255, ${mouseLineAlpha})`;
           ctx.lineWidth = 2.2;
@@ -1061,12 +1224,289 @@ function initFestParticles() {
   animate();
 }
 
+// -------------------------------------------------------------
+// Roll-Up Slot Machine Stats Counter
+// -------------------------------------------------------------
+function initStatCounters() {
+  const counters = document.querySelectorAll(".stat-counter");
+  counters.forEach((counter) => {
+    const target = parseInt(counter.getAttribute("data-target") || "0", 10);
+    const prefix = counter.getAttribute("data-prefix") || "";
+    const suffix = counter.getAttribute("data-suffix") || "";
+    const duration = 2000;
+    const startTime = performance.now();
+
+    function updateCounter(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease out cubic
+      const easeProgress = 1 - Math.pow(1 - progress, 3);
+      const currentVal = Math.floor(easeProgress * target);
+
+      counter.textContent = `${prefix}${currentVal.toLocaleString()}${progress >= 1 ? suffix : ""}`;
+
+      if (progress < 1) {
+        requestAnimationFrame(updateCounter);
+      } else {
+        counter.textContent = `${prefix}${target.toLocaleString()}${suffix}`;
+      }
+    }
+
+    requestAnimationFrame(updateCounter);
+  });
+}
+
+// -------------------------------------------------------------
+// Live Activity Notification Toasts (Real-time Fest Energy)
+// -------------------------------------------------------------
+function initLiveActivityToasts() {
+  const container = document.getElementById("live-activity-container");
+  if (!container) return;
+
+  const activities = [
+    { name: "Rahul S.", dept: "CSE", event: "Code Sprint 2.0", icon: "💻", color: "text-cyan-400" },
+    { name: "Priya K.", dept: "IT", event: "Dance Fiesta", icon: "💃", color: "text-pink-400" },
+    { name: "Arjun M.", dept: "ECE", event: "Robo Race 2.0", icon: "🤖", color: "text-cyan-400" },
+    { name: "Team Phoenix", dept: "Gaming Club", event: "Valorant Showdown", icon: "🎮", color: "text-rose-400" },
+    { name: "Acoustic Souls", dept: "Music Soc", event: "Battle of the Bands", icon: "🎸", color: "text-purple-400" },
+    { name: "Sneha P.", dept: "Design Cell", event: "UI/UX Workshop", icon: "✏️", color: "text-amber-400" },
+    { name: "Vikram R.", dept: "Sports Comm", event: "5-a-Side Football", icon: "⚽", color: "text-emerald-400" },
+    { name: "Aditya V.", dept: "AI Cell", event: "AI Pitch Fest", icon: "🧠", color: "text-cyan-400" },
+    { name: "Rohan D.", dept: "CSE", event: "Intro to Vibe Coding", icon: "⚡", color: "text-amber-400" },
+    { name: "Ananya B.", dept: "Media Club", event: "Photography Walk", icon: "📷", color: "text-purple-400" },
+  ];
+
+  let currentIdx = 0;
+
+  function dismissToast(toast) {
+    if (!toast || !toast.parentNode) return;
+    toast.classList.remove("toast-enter");
+    toast.classList.add("toast-exit");
+    setTimeout(() => {
+      if (toast.parentNode) toast.parentNode.removeChild(toast);
+    }, 320);
+  }
+
+  function showNextToast() {
+    const act = activities[currentIdx];
+    currentIdx = (currentIdx + 1) % activities.length;
+
+    const toast = document.createElement("div");
+    toast.className =
+      "toast-enter flex items-center gap-3 p-3.5 rounded-2xl bg-slate-900/90 backdrop-blur-md border border-purple-800/50 shadow-2xl shadow-purple-950/70 text-xs text-slate-200 cursor-pointer hover:border-purple-500 transition group mb-2.5 max-w-sm";
+    toast.innerHTML = `
+      <span class="text-2xl p-2 rounded-xl bg-slate-800 border border-slate-700/60 shadow-inner flex-shrink-0 animate-bounce">
+        ${act.icon}
+      </span>
+      <div class="flex-1 min-w-0 pr-1">
+        <div class="flex items-center gap-1.5 mb-0.5">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+          </span>
+          <span class="font-extrabold text-white truncate">${act.name}</span>
+          <span class="text-[10px] text-slate-400 font-mono">(${act.dept})</span>
+        </div>
+        <p class="text-[11px] text-slate-300 truncate">
+          Registered for <span class="font-bold ${act.color}">${act.event}</span>
+        </p>
+      </div>
+      <button class="text-slate-500 hover:text-white text-xs px-1.5 py-0.5 rounded transition" title="Dismiss">✕</button>
+    `;
+
+    toast.querySelector("button").addEventListener("click", (e) => {
+      e.stopPropagation();
+      dismissToast(toast);
+    });
+
+    toast.addEventListener("mouseenter", () => {
+      playHoverBlip();
+    });
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+      dismissToast(toast);
+    }, 5500);
+  }
+
+  // Launch initial toast after 2.5s, then trigger every 8.5s
+  setTimeout(() => {
+    showNextToast();
+    setInterval(showNextToast, 8500);
+  }, 2500);
+}
+
+// -------------------------------------------------------------
+// Interactive Fullscreen Stardust Cursor Sparkle Trail
+// -------------------------------------------------------------
+function initCursorSparkles() {
+  const canvas = document.getElementById("cursor-sparkle-canvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  let sparkles = [];
+  const sparkleColors = ["#00f5ff", "#ff1e96", "#b94bff", "#ffdc00", "#00ffaa", "#ffffff"];
+
+  window.addEventListener("mousemove", (e) => {
+    for (let i = 0; i < 2; i++) {
+      if (sparkles.length < 80) {
+        sparkles.push({
+          x: e.clientX + (Math.random() - 0.5) * 10,
+          y: e.clientY + (Math.random() - 0.5) * 10,
+          vx: (Math.random() - 0.5) * 1.1,
+          vy: Math.random() * 0.9 + 0.3,
+          size: Math.random() * 2.8 + 1.8,
+          color: sparkleColors[Math.floor(Math.random() * sparkleColors.length)],
+          alpha: 1,
+          life: 0,
+          maxLife: Math.random() * 22 + 18,
+        });
+      }
+    }
+  });
+
+  function drawStar(cx, cy, spikes, outerRadius, innerRadius, color, alpha) {
+    let rot = (Math.PI / 2) * 3;
+    let x = cx;
+    let y = cy;
+    let step = Math.PI / spikes;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - outerRadius);
+    for (let i = 0; i < spikes; i++) {
+      x = cx + Math.cos(rot) * outerRadius;
+      y = cy + Math.sin(rot) * outerRadius;
+      ctx.lineTo(x, y);
+      rot += step;
+
+      x = cx + Math.cos(rot) * innerRadius;
+      y = cy + Math.sin(rot) * innerRadius;
+      ctx.lineTo(x, y);
+      rot += step;
+    }
+    ctx.lineTo(cx, cy - outerRadius);
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.globalAlpha = alpha;
+    ctx.shadowBlur = 6;
+    ctx.shadowColor = color;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function loop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let i = sparkles.length - 1; i >= 0; i--) {
+      const s = sparkles[i];
+      s.life++;
+      s.x += s.vx;
+      s.y += s.vy;
+      s.alpha = Math.max(0, 1 - s.life / s.maxLife);
+
+      if (s.life >= s.maxLife || s.alpha <= 0) {
+        sparkles.splice(i, 1);
+      } else {
+        drawStar(s.x, s.y, 4, s.size, s.size * 0.38, s.color, s.alpha);
+      }
+    }
+
+    requestAnimationFrame(loop);
+  }
+
+  requestAnimationFrame(loop);
+}
+
+// -------------------------------------------------------------
+// Fest Theme Switcher Pill
+// -------------------------------------------------------------
+function initFestThemeSwitcher() {
+  const themeBtn = document.getElementById("fest-theme-btn");
+  const themeIcon = document.getElementById("theme-icon");
+  const themeLabel = document.getElementById("theme-label");
+  if (!themeBtn) return;
+
+  themeBtn.addEventListener("click", () => {
+    currentThemeIndex = (currentThemeIndex + 1) % festThemes.length;
+    const theme = festThemes[currentThemeIndex];
+    activeParticleColors = theme.colors;
+
+    if (themeIcon) themeIcon.textContent = theme.icon;
+    if (themeLabel) themeLabel.textContent = theme.name;
+
+    // Refresh active particles to pick up new theme colors
+    festParticleSystem.forEach((p) => {
+      p.colorIndex = Math.floor(Math.random() * activeParticleColors.length);
+      p.baseColor = activeParticleColors[p.colorIndex];
+    });
+
+    playFilterWhoosh();
+  });
+}
+
+// -------------------------------------------------------------
+// SFX Audio Toggle Button
+// -------------------------------------------------------------
+function initSfxToggle() {
+  const sfxBtn = document.getElementById("fest-sfx-btn");
+  const sfxIcon = document.getElementById("sfx-icon");
+  const sfxLabel = document.getElementById("sfx-label");
+  if (!sfxBtn) return;
+
+  sfxBtn.addEventListener("click", () => {
+    isSfxEnabled = !isSfxEnabled;
+    if (sfxIcon) sfxIcon.textContent = isSfxEnabled ? "🔊" : "🔇";
+    if (sfxLabel) sfxLabel.textContent = isSfxEnabled ? "SFX On" : "SFX Muted";
+
+    if (isSfxEnabled) {
+      playHoverBlip();
+    }
+  });
+}
+
+// -------------------------------------------------------------
+// Fest Logo Cyber Power Zap & Glitch on Click
+// -------------------------------------------------------------
+function initFestLogoZap() {
+  const logo = document.getElementById("fest-logo-link");
+  if (!logo) return;
+
+  logo.addEventListener("click", (e) => {
+    e.preventDefault();
+    logo.classList.add("cyber-glitch-active");
+    playZapSound();
+    fireFestConfetti();
+
+    setTimeout(() => {
+      logo.classList.remove("cyber-glitch-active");
+    }, 800);
+  });
+}
+
+// -------------------------------------------------------------
 // Initial Boot
+// -------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
   fetchEvents();
   startFestCountdown();
   startTypewriter();
   initFestParticles();
+  initStatCounters();
+  initLiveActivityToasts();
+  initCursorSparkles();
+  initFestThemeSwitcher();
+  initSfxToggle();
+  initFestLogoZap();
 
   const audioBtn = document.getElementById("fest-audio-btn");
   if (audioBtn) {
