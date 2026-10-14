@@ -65,6 +65,43 @@
     .animate-pulse-glow {
       animation: pulseGlow 6s ease-in-out infinite;
     }
+    @keyframes floatItem1 {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-18px) rotate(3deg); }
+    }
+    @keyframes floatItem2 {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-24px) rotate(-4deg); }
+    }
+    @keyframes floatItem3 {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-14px) rotate(2deg); }
+    }
+    @keyframes shimmerText {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes twinkleSparkle {
+      0%, 100% { opacity: 0.2; transform: scale(0.8) rotate(0deg); }
+      50% { opacity: 1; transform: scale(1.25) rotate(15deg); filter: drop-shadow(0 0 6px #f59e0b); }
+    }
+    .animate-float-1 {
+      animation: floatItem1 5.5s ease-in-out infinite;
+    }
+    .animate-float-2 {
+      animation: floatItem2 7s ease-in-out infinite;
+    }
+    .animate-float-3 {
+      animation: floatItem3 6.2s ease-in-out infinite;
+    }
+    .animate-shimmer-title {
+      background-size: 200% auto;
+      animation: shimmerText 4s linear infinite;
+    }
+    .animate-twinkle {
+      animation: twinkleSparkle 3s ease-in-out infinite;
+    }
   </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-purple-500 selection:text-white">
@@ -104,7 +141,7 @@
     </div>
   </header>
 
-  <!-- Hero Section with Glowing Neon Blobs & Countdown -->
+  <!-- Hero Section with Glowing Neon Blobs, Floating Badges & Countdown -->
   <section class="relative overflow-hidden pt-12 pb-14 bg-gradient-to-b from-purple-950/40 via-slate-900 to-slate-900 border-b border-slate-800/80">
     <!-- Floating Ambient Neon Blobs -->
     <div class="absolute -top-20 left-1/4 w-72 h-72 sm:w-96 sm:h-96 bg-purple-600/25 rounded-full blur-3xl pointer-events-none animate-float-slow"></div>
@@ -113,42 +150,100 @@
     
     <div class="absolute inset-0 bg-[radial-gradient(#8b5cf6_1px,transparent_1px)] [background-size:24px_24px] opacity-10 pointer-events-none"></div>
 
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+    <!-- Floating Fest Wing Badges (Left Side) - Visible on tablet & desktop -->
+    <div class="hidden md:block absolute left-4 lg:left-12 xl:left-20 top-12 z-20 pointer-events-none select-none space-y-4">
+      <div class="animate-float-1 flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-slate-850/90 backdrop-blur-md border border-cyan-500/50 shadow-xl shadow-cyan-950/70 hover:scale-105 transition-transform pointer-events-auto cursor-default">
+        <span class="text-2xl">🤖</span>
+        <div class="text-left">
+          <span class="block text-[9px] font-bold uppercase tracking-wider text-cyan-400">Technical</span>
+          <span class="text-xs font-bold text-white">Robo Race 2.0</span>
+        </div>
+      </div>
+
+      <div class="animate-float-2 ml-5 flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-slate-850/90 backdrop-blur-md border border-rose-500/50 shadow-xl shadow-rose-950/70 hover:scale-105 transition-transform pointer-events-auto cursor-default">
+        <span class="text-2xl">🎮</span>
+        <div class="text-left">
+          <span class="block text-[9px] font-bold uppercase tracking-wider text-rose-400">Gaming Arena</span>
+          <span class="text-xs font-bold text-white">Valorant Clash</span>
+        </div>
+      </div>
+
+      <div class="animate-float-3 flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-slate-850/90 backdrop-blur-md border border-amber-500/50 shadow-lg shadow-amber-950/70">
+        <span class="text-base">⚡</span>
+        <span class="text-xs font-bold text-amber-300">Live Hackathon</span>
+      </div>
+    </div>
+
+    <!-- Floating Fest Wing Badges (Right Side) - Visible on tablet & desktop -->
+    <div class="hidden md:block absolute right-4 lg:right-12 xl:right-20 top-12 z-20 pointer-events-none select-none space-y-4">
+      <div class="animate-float-2 flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-slate-850/90 backdrop-blur-md border border-purple-500/50 shadow-xl shadow-purple-950/70 hover:scale-105 transition-transform pointer-events-auto cursor-default">
+        <span class="text-2xl">🎸</span>
+        <div class="text-left">
+          <span class="block text-[9px] font-bold uppercase tracking-wider text-purple-400">Cultural</span>
+          <span class="text-xs font-bold text-white">Battle of Bands</span>
+        </div>
+      </div>
+
+      <div class="animate-float-1 mr-5 flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-slate-850/90 backdrop-blur-md border border-emerald-500/50 shadow-xl shadow-emerald-950/70 hover:scale-105 transition-transform pointer-events-auto cursor-default">
+        <span class="text-2xl">⚽</span>
+        <div class="text-left">
+          <span class="block text-[9px] font-bold uppercase tracking-wider text-emerald-400">Sports League</span>
+          <span class="text-xs font-bold text-white">5-a-Side Football</span>
+        </div>
+      </div>
+
+      <div class="animate-float-3 flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-slate-850/90 backdrop-blur-md border border-pink-500/50 shadow-lg shadow-pink-950/70">
+        <span class="text-base">✨</span>
+        <span class="text-xs font-bold text-pink-300">Dance Fiesta</span>
+      </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs sm:text-sm font-semibold mb-5 shadow-sm">
-        <span>📍 Nov 14 – 15, 2026</span>
+        <span class="animate-pulse">📍</span>
+        <span>Nov 14 – 15, 2026</span>
         <span>•</span>
         <span>Campus Grounds</span>
       </div>
 
-      <h1 class="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white mb-4">
-        Ignite Your Spark at <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300 bg-clip-text text-transparent">HSB FEST 2026</span>
-      </h1>
+      <!-- Hero Heading with Floating Sparkles and Active Gradient Shimmer -->
+      <div class="relative inline-block mb-4">
+        <span class="absolute -top-6 -left-8 text-2xl animate-float-1 select-none pointer-events-none">🚀</span>
+        <span class="absolute -top-5 -right-6 text-xl animate-twinkle select-none pointer-events-none">✨</span>
+        <h1 class="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white leading-tight">
+          Ignite Your Spark at<br />
+          <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300 bg-clip-text text-transparent animate-shimmer-title inline-block mt-1">
+            HSB FEST 2026
+          </span>
+        </h1>
+        <span class="absolute -bottom-3 -right-8 text-xl animate-float-3 select-none pointer-events-none">⚡</span>
+      </div>
 
       <p class="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed mb-6">
         The ultimate college arena of technology, culture, design, gaming, and sports at HSB FEST 2026. Explore 14 premier events and lock in your registrations early!
       </p>
 
       <!-- Live Fest Countdown Timer -->
-      <div class="inline-flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-center p-3 sm:p-4 rounded-2xl bg-slate-850/80 backdrop-blur border border-purple-800/40 shadow-xl shadow-purple-950/40">
-        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700/60 min-w-[62px] sm:min-w-[70px] flex-col">
+      <div class="inline-flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-center p-3 sm:p-4 rounded-2xl bg-slate-850/80 backdrop-blur border border-purple-800/40 shadow-xl shadow-purple-950/40 hover:border-purple-600/60 transition-all">
+        <div class="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700/60 min-w-[62px] sm:min-w-[70px] flex-col shadow-inner">
           <span id="timer-days" class="text-xl sm:text-2xl font-black text-purple-300 font-mono tracking-wider">00</span>
           <span class="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400">Days</span>
         </div>
         <span class="text-purple-400 font-bold text-lg hidden sm:inline">:</span>
 
-        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700/60 min-w-[62px] sm:min-w-[70px] flex-col">
+        <div class="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700/60 min-w-[62px] sm:min-w-[70px] flex-col shadow-inner">
           <span id="timer-hours" class="text-xl sm:text-2xl font-black text-pink-300 font-mono tracking-wider">00</span>
           <span class="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400">Hours</span>
         </div>
         <span class="text-purple-400 font-bold text-lg hidden sm:inline">:</span>
 
-        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700/60 min-w-[62px] sm:min-w-[70px] flex-col">
+        <div class="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700/60 min-w-[62px] sm:min-w-[70px] flex-col shadow-inner">
           <span id="timer-minutes" class="text-xl sm:text-2xl font-black text-amber-300 font-mono tracking-wider">00</span>
           <span class="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400">Mins</span>
         </div>
         <span class="text-purple-400 font-bold text-lg hidden sm:inline">:</span>
 
-        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700/60 min-w-[62px] sm:min-w-[70px] flex-col">
+        <div class="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700/60 min-w-[62px] sm:min-w-[70px] flex-col shadow-inner">
           <span id="timer-seconds" class="text-xl sm:text-2xl font-black text-emerald-300 font-mono tracking-wider">00</span>
           <span class="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400">Secs</span>
         </div>
