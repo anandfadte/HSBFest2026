@@ -63,18 +63,28 @@ function getCategoryBadgeClass(category) {
 function getCategoryGlowClass(category) {
   switch (category?.toLowerCase()) {
     case "technical":
-      return "hover:border-cyan-400/80 hover:shadow-cyan-950/50";
+      return "breathe-cyan hover:border-cyan-400 hover:shadow-cyan-950/60";
     case "cultural":
-      return "hover:border-pink-400/80 hover:shadow-pink-950/50";
+      return "breathe-pink hover:border-pink-400 hover:shadow-pink-950/60";
     case "sports":
-      return "hover:border-emerald-400/80 hover:shadow-emerald-950/50";
+      return "breathe-emerald hover:border-emerald-400 hover:shadow-emerald-950/60";
     case "gaming":
-      return "hover:border-rose-400/80 hover:shadow-rose-950/50";
+      return "breathe-rose hover:border-rose-400 hover:shadow-rose-950/60";
     case "workshop":
-      return "hover:border-amber-400/80 hover:shadow-amber-950/50";
+      return "breathe-amber hover:border-amber-400 hover:shadow-amber-950/60";
     default:
-      return "hover:border-purple-400/80 hover:shadow-purple-950/50";
+      return "breathe-pink hover:border-purple-400 hover:shadow-purple-950/60";
   }
+}
+
+function getIconAnimationClass(category, icon) {
+  if (category?.toLowerCase() === "gaming" || icon === "🎮") {
+    return "animate-icon-arcade";
+  }
+  if (category?.toLowerCase() === "technical" || icon === "🤖" || icon === "🧠") {
+    return "animate-icon-tilt";
+  }
+  return "animate-icon-bob";
 }
 
 // -------------------------------------------------------------
@@ -130,8 +140,10 @@ function renderEventsGrid(events) {
   events.forEach((event, index) => {
     const card = document.createElement("div");
     const categoryGlow = getCategoryGlowClass(event.category);
+    const iconAnim = getIconAnimationClass(event.category, event.icon);
+
     card.className =
-      `card-fade bg-slate-800/70 backdrop-blur border border-slate-750/80 rounded-2xl p-5 flex flex-col justify-between ${categoryGlow} hover:shadow-xl hover:-translate-y-1 transition-all duration-200 group`;
+      `card-fade bg-slate-800/75 backdrop-blur border rounded-2xl p-5 flex flex-col justify-between ${categoryGlow} hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 group`;
     card.style.animationDelay = `${index * 35}ms`;
 
     const isFull = event.available_seats <= 0;
@@ -139,11 +151,20 @@ function renderEventsGrid(events) {
     const feeText = event.fee > 0 ? `₹${event.fee}` : "Free";
     const categoryBadgeClass = getCategoryBadgeClass(event.category);
 
+    const filledSeats = Math.max(0, event.capacity - event.available_seats);
+    const fillPct = event.capacity > 0 ? Math.min(100, Math.round((filledSeats / event.capacity) * 100)) : 0;
+    const isHighDemand = fillPct >= 80 || isFastFilling;
+    const barGradient = isFull
+      ? "bg-rose-500"
+      : isHighDemand
+      ? "bg-gradient-to-r from-amber-500 to-rose-500 animate-pulse"
+      : "bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-400";
+
     card.innerHTML = `
       <div>
         <div class="flex items-start justify-between gap-3 mb-3">
           <div class="flex items-center gap-2.5">
-            <span class="text-3xl p-2 rounded-xl bg-slate-750 group-hover:scale-110 transition-transform select-none">
+            <span class="text-3xl p-2.5 rounded-xl bg-slate-750/90 border border-slate-700/60 ${iconAnim} group-hover:scale-110 transition-transform select-none inline-block">
               ${event.icon || "✨"}
             </span>
             <div>
@@ -168,7 +189,7 @@ function renderEventsGrid(events) {
           ${event.description || "No description provided."}
         </p>
 
-        <div class="space-y-1.5 text-xs text-slate-300 pt-3 border-t border-slate-700/60 mb-5">
+        <div class="space-y-2 text-xs text-slate-300 pt-3 border-t border-slate-700/60 mb-5">
           <div class="flex items-center gap-2">
             <span class="text-slate-400">📅</span>
             <span>${event.event_date} • ${event.event_time}</span>
@@ -177,17 +198,24 @@ function renderEventsGrid(events) {
             <span class="text-slate-400">📍</span>
             <span class="truncate">${event.venue}</span>
           </div>
-          <div class="flex items-center justify-between pt-1 text-slate-300 font-medium">
-            <span>Seats:</span>
-            <div class="flex items-center gap-1.5">
-              ${
-                isFastFilling
-                  ? `<span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-800 animate-pulse">🔥 Filling Fast</span>`
-                  : ""
-              }
-              <span class="${isFull ? 'text-rose-400 font-bold' : isFastFilling ? 'text-amber-400 font-bold' : 'text-emerald-400 font-bold'}">
-                ${event.available_seats} / ${event.capacity} left
-              </span>
+
+          <!-- Capacity Info with Visual Animated Progress Bar -->
+          <div class="pt-1">
+            <div class="flex items-center justify-between text-slate-300 font-medium text-xs mb-1.5">
+              <span class="text-slate-400">Capacity:</span>
+              <div class="flex items-center gap-1.5">
+                ${
+                  isFastFilling
+                    ? `<span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-800 animate-pulse">🔥 Filling Fast</span>`
+                    : ""
+                }
+                <span class="${isFull ? 'text-rose-400 font-bold' : isHighDemand ? 'text-amber-400 font-bold' : 'text-emerald-400 font-bold'}">
+                  ${event.available_seats} / ${event.capacity} left
+                </span>
+              </div>
+            </div>
+            <div class="w-full bg-slate-900/90 rounded-full h-1.5 overflow-hidden border border-slate-700/60">
+              <div class="h-full rounded-full transition-all duration-700 ${barGradient}" style="width: ${Math.max(4, fillPct)}%"></div>
             </div>
           </div>
         </div>
@@ -195,10 +223,10 @@ function renderEventsGrid(events) {
 
       <button
         onclick="openEventDetails(${event.id})"
-        class="w-full py-2 px-3 text-xs sm:text-sm font-semibold rounded-xl bg-slate-750 hover:bg-purple-600 active:bg-purple-700 text-white border border-slate-700 hover:border-purple-500 transition-all duration-150 flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+        class="w-full py-2.5 px-3 text-xs sm:text-sm font-bold rounded-xl bg-slate-750 hover:bg-gradient-to-r hover:from-purple-600 hover:via-pink-600 hover:to-indigo-600 active:scale-[0.98] text-white border border-slate-700 hover:border-pink-500 transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer shadow-md group/btn"
       >
         <span>View Details & Register</span>
-        <span class="text-xs">→</span>
+        <span class="text-xs transition-transform duration-200 group-hover/btn:translate-x-1">→</span>
       </button>
     `;
 
@@ -655,10 +683,61 @@ function stopFestAudio() {
   if (btn) btn.classList.remove("bg-purple-600", "text-white", "animate-pulse");
 }
 
+// -------------------------------------------------------------
+// Dynamic Hero Typewriter Effect
+// -------------------------------------------------------------
+function startTypewriter() {
+  const targetEl = document.getElementById("typewriter-text");
+  if (!targetEl) return;
+
+  const phrases = [
+    "HSB FEST 2026 🚀",
+    "The Ultimate Tech Arena 💻",
+    "Battle of the Bands 🎸",
+    "Valorant & Gaming Arena 🎮",
+    "14 Epic Competitions 🏆",
+    "Where Legends Compete ⚡",
+  ];
+
+  let phraseIndex = 0;
+  let charIndex = phrases[0].length;
+  let isDeleting = true;
+
+  function type() {
+    const currentPhrase = phrases[phraseIndex];
+
+    if (isDeleting) {
+      charIndex--;
+      targetEl.textContent = currentPhrase.substring(0, charIndex);
+    } else {
+      charIndex++;
+      targetEl.textContent = currentPhrase.substring(0, charIndex);
+    }
+
+    let typeSpeed = isDeleting ? 40 : 80;
+
+    // Finished typing full word
+    if (!isDeleting && charIndex === currentPhrase.length) {
+      typeSpeed = 2000; // Pause at complete word
+      isDeleting = true;
+    } else if (isDeleting && charIndex === 0) {
+      isDeleting = false;
+      phraseIndex = (phraseIndex + 1) % phrases.length;
+      typeSpeed = 400; // Brief pause before typing next
+    }
+
+    setTimeout(type, typeSpeed);
+  }
+
+  // Let initial title display for 2.2 seconds before starting typewriter loop
+  setTimeout(type, 2200);
+}
+
 // Initial Boot
 document.addEventListener("DOMContentLoaded", () => {
   fetchEvents();
   startFestCountdown();
+  startTypewriter();
 
   const audioBtn = document.getElementById("fest-audio-btn");
   if (audioBtn) {

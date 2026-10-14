@@ -102,6 +102,52 @@
     .animate-twinkle {
       animation: twinkleSparkle 3s ease-in-out infinite;
     }
+
+    /* Event Card Living Animations */
+    @keyframes iconTilt {
+      0%, 100% { transform: rotate(-8deg) scale(1); }
+      50% { transform: rotate(8deg) scale(1.1); }
+    }
+    @keyframes iconBob {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-6px) scale(1.08); }
+    }
+    @keyframes iconArcade {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 3px rgba(244, 63, 94, 0.4)); }
+      50% { transform: scale(1.15) rotate(-3deg); filter: drop-shadow(0 0 12px rgba(244, 63, 94, 0.8)); }
+    }
+
+    /* Category Breathing Ambient Border Glows */
+    @keyframes borderBreatheCyan {
+      0%, 100% { border-color: rgba(6, 182, 212, 0.35); box-shadow: 0 4px 18px -2px rgba(6, 182, 212, 0.12); }
+      50% { border-color: rgba(6, 182, 212, 0.7); box-shadow: 0 4px 26px 2px rgba(6, 182, 212, 0.28); }
+    }
+    @keyframes borderBreathePink {
+      0%, 100% { border-color: rgba(236, 72, 153, 0.35); box-shadow: 0 4px 18px -2px rgba(236, 72, 153, 0.12); }
+      50% { border-color: rgba(236, 72, 153, 0.7); box-shadow: 0 4px 26px 2px rgba(236, 72, 153, 0.28); }
+    }
+    @keyframes borderBreatheEmerald {
+      0%, 100% { border-color: rgba(16, 185, 129, 0.35); box-shadow: 0 4px 18px -2px rgba(16, 185, 129, 0.12); }
+      50% { border-color: rgba(16, 185, 129, 0.7); box-shadow: 0 4px 26px 2px rgba(16, 185, 129, 0.28); }
+    }
+    @keyframes borderBreatheRose {
+      0%, 100% { border-color: rgba(244, 63, 94, 0.35); box-shadow: 0 4px 18px -2px rgba(244, 63, 94, 0.12); }
+      50% { border-color: rgba(244, 63, 94, 0.7); box-shadow: 0 4px 26px 2px rgba(244, 63, 94, 0.28); }
+    }
+    @keyframes borderBreatheAmber {
+      0%, 100% { border-color: rgba(245, 158, 11, 0.35); box-shadow: 0 4px 18px -2px rgba(245, 158, 11, 0.12); }
+      50% { border-color: rgba(245, 158, 11, 0.7); box-shadow: 0 4px 26px 2px rgba(245, 158, 11, 0.28); }
+    }
+
+    .animate-icon-tilt { animation: iconTilt 3.8s ease-in-out infinite; }
+    .animate-icon-bob { animation: iconBob 3.2s ease-in-out infinite; }
+    .animate-icon-arcade { animation: iconArcade 2.5s ease-in-out infinite; }
+
+    .breathe-cyan { animation: borderBreatheCyan 4.2s ease-in-out infinite; }
+    .breathe-pink { animation: borderBreathePink 4s ease-in-out infinite; }
+    .breathe-emerald { animation: borderBreatheEmerald 4.5s ease-in-out infinite; }
+    .breathe-rose { animation: borderBreatheRose 3.6s ease-in-out infinite; }
+    .breathe-amber { animation: borderBreatheAmber 4.1s ease-in-out infinite; }
   </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-purple-500 selection:text-white">
@@ -206,14 +252,15 @@
         <span>Campus Grounds</span>
       </div>
 
-      <!-- Hero Heading with Floating Sparkles and Active Gradient Shimmer -->
+      <!-- Hero Heading with Floating Sparkles and Typewriter Effect -->
       <div class="relative inline-block mb-4">
         <span class="absolute -top-6 -left-8 text-2xl animate-float-1 select-none pointer-events-none">🚀</span>
         <span class="absolute -top-5 -right-6 text-xl animate-twinkle select-none pointer-events-none">✨</span>
-        <h1 class="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white leading-tight">
-          Ignite Your Spark at<br />
-          <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300 bg-clip-text text-transparent animate-shimmer-title inline-block mt-1">
-            HSB FEST 2026
+        <h1 class="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white leading-tight min-h-[95px] sm:min-h-[135px] flex flex-col items-center justify-center">
+          <span class="block">Ignite Your Spark at</span>
+          <span class="inline-flex items-center justify-center mt-1.5">
+            <span id="typewriter-text" class="bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300 bg-clip-text text-transparent animate-shimmer-title inline-block">HSB FEST 2026 🚀</span>
+            <span id="typewriter-cursor" class="inline-block w-1 sm:w-1.5 h-7 sm:h-11 bg-pink-400 ml-1.5 rounded-full shadow-[0_0_12px_#f472b6] animate-pulse"></span>
           </span>
         </h1>
         <span class="absolute -bottom-3 -right-8 text-xl animate-float-3 select-none pointer-events-none">⚡</span>
