@@ -119,7 +119,91 @@
       50% { transform: scale(1.15) rotate(-3deg); filter: drop-shadow(0 0 12px rgba(244, 63, 94, 0.8)); }
     }
 
-    /* Category Breathing Ambient Border Glows */
+    /* Event-Specific Alive Icon Animations */
+    @keyframes iconCode {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(6, 182, 212, 0.4)); }
+      50% { transform: scale(1.12); filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.8)); }
+    }
+    @keyframes iconRobot {
+      0%, 100% { transform: rotate(-9deg) scale(1); }
+      50% { transform: rotate(9deg) scale(1.1); filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.7)); }
+    }
+    @keyframes iconAI {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 3px rgba(168, 85, 247, 0.4)); }
+      50% { transform: scale(1.14) rotate(4deg); filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.9)); }
+    }
+    @keyframes iconPalette {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      33% { transform: rotate(-10deg) scale(1.1); }
+      66% { transform: rotate(8deg) scale(1.08); }
+    }
+    @keyframes iconGuitar {
+      0%, 100% { transform: rotate(-10deg) translateY(0); filter: drop-shadow(0 0 4px rgba(236, 72, 153, 0.4)); }
+      50% { transform: rotate(10deg) translateY(-4px); filter: drop-shadow(0 0 12px rgba(236, 72, 153, 0.8)); }
+    }
+    @keyframes iconDance {
+      0%, 100% { transform: translateY(0) rotate(-6deg) scale(1); }
+      25% { transform: translateY(-8px) rotate(10deg) scale(1.15); }
+      50% { transform: translateY(-2px) rotate(-6deg) scale(1.05); }
+      75% { transform: translateY(-10px) rotate(8deg) scale(1.12); }
+    }
+    @keyframes iconDrama {
+      0%, 100% { transform: rotate(-8deg); }
+      50% { transform: rotate(8deg) scale(1.1); }
+    }
+    @keyframes iconFashion {
+      0%, 100% { transform: translateY(0px) rotate(-3deg); }
+      50% { transform: translateY(-6px) rotate(4deg) scale(1.08); }
+    }
+    @keyframes iconMic {
+      0%, 100% { transform: scale(1) rotate(-5deg); filter: drop-shadow(0 0 2px rgba(168, 85, 247, 0.4)); }
+      50% { transform: scale(1.15) rotate(5deg); filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.8)); }
+    }
+    @keyframes iconFootball {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(180deg) scale(1.1); filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.7)); }
+    }
+    @keyframes iconChess {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      30% { transform: translateY(-7px) rotate(-8deg) scale(1.1); }
+      60% { transform: translateY(-2px) rotate(6deg); }
+    }
+    @keyframes iconGaming {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 3px rgba(244, 63, 94, 0.5)); }
+      50% { transform: scale(1.16) rotate(-4deg); filter: drop-shadow(0 0 14px rgba(244, 63, 94, 0.9)); }
+    }
+    @keyframes iconSketch {
+      0%, 100% { transform: rotate(-5deg) translateY(0); }
+      50% { transform: rotate(10deg) translateY(-5px); }
+    }
+    @keyframes iconLightning {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 3px rgba(245, 158, 11, 0.5)); }
+      50% { transform: scale(1.2) rotate(6deg); filter: drop-shadow(0 0 14px rgba(245, 158, 11, 0.95)); }
+    }
+    @keyframes iconCamera {
+      0%, 90%, 100% { transform: scale(1); filter: brightness(1); }
+      93% { transform: scale(1.12); filter: brightness(1.7) drop-shadow(0 0 12px #fff); }
+      96% { transform: scale(1.05); filter: brightness(1.2); }
+    }
+
+    .animate-icon-tilt { animation: iconTilt 3.8s ease-in-out infinite; }
+    .animate-icon-bob { animation: iconBob 3.2s ease-in-out infinite; }
+    .animate-icon-arcade { animation: iconArcade 2.5s ease-in-out infinite; }
+    .animate-icon-code { animation: iconCode 2.8s ease-in-out infinite; }
+    .animate-icon-robot { animation: iconRobot 3.5s ease-in-out infinite; }
+    .animate-icon-ai { animation: iconAI 3s ease-in-out infinite; }
+    .animate-icon-palette { animation: iconPalette 3.8s ease-in-out infinite; }
+    .animate-icon-guitar { animation: iconGuitar 2.6s ease-in-out infinite; }
+    .animate-icon-dance { animation: iconDance 1.8s ease-in-out infinite; }
+    .animate-icon-drama { animation: iconDrama 3.2s ease-in-out infinite; }
+    .animate-icon-fashion { animation: iconFashion 3.4s ease-in-out infinite; }
+    .animate-icon-mic { animation: iconMic 2.5s ease-in-out infinite; }
+    .animate-icon-football { animation: iconFootball 1.6s ease-in-out infinite; }
+    .animate-icon-chess { animation: iconChess 2.4s ease-in-out infinite; }
+    .animate-icon-gaming { animation: iconGaming 2.2s ease-in-out infinite; }
+    .animate-icon-sketch { animation: iconSketch 3s ease-in-out infinite; }
+    .animate-icon-lightning { animation: iconLightning 1.5s ease-in-out infinite; }
+    .animate-icon-camera { animation: iconCamera 3.5s ease-in-out infinite; }
     @keyframes borderBreatheCyan {
       0%, 100% { border-color: rgba(6, 182, 212, 0.35); box-shadow: 0 4px 18px -2px rgba(6, 182, 212, 0.12); }
       50% { border-color: rgba(6, 182, 212, 0.7); box-shadow: 0 4px 26px 2px rgba(6, 182, 212, 0.28); }

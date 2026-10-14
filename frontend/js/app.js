@@ -77,14 +77,86 @@ function getCategoryGlowClass(category) {
   }
 }
 
-function getIconAnimationClass(category, icon) {
-  if (category?.toLowerCase() === "gaming" || icon === "🎮") {
-    return "animate-icon-arcade";
-  }
-  if (category?.toLowerCase() === "technical" || icon === "🤖" || icon === "🧠") {
-    return "animate-icon-tilt";
-  }
+function getIconAnimationClass(category, icon, title = "") {
+  const t = (title || "").toLowerCase();
+  if (icon === "💻" || t.includes("code")) return "animate-icon-code";
+  if (icon === "🤖" || t.includes("robo")) return "animate-icon-robot";
+  if (icon === "🧠" || t.includes("ai")) return "animate-icon-ai";
+  if (icon === "🎨" || t.includes("web design")) return "animate-icon-palette";
+  if (icon === "🎸" || t.includes("band")) return "animate-icon-guitar";
+  if (icon === "💃" || t.includes("dance")) return "animate-icon-dance";
+  if (icon === "🎭" || t.includes("nukkad")) return "animate-icon-drama";
+  if (icon === "👗" || t.includes("fashion")) return "animate-icon-fashion";
+  if (icon === "🎤" || t.includes("mic")) return "animate-icon-mic";
+  if (icon === "⚽" || t.includes("football")) return "animate-icon-football";
+  if (icon === "♟️" || t.includes("chess")) return "animate-icon-chess";
+  if (icon === "🎮" || t.includes("gaming") || t.includes("valorant")) return "animate-icon-gaming";
+  if (icon === "✏️" || t.includes("ui/ux")) return "animate-icon-sketch";
+  if (icon === "⚡" || t.includes("vibe")) return "animate-icon-lightning";
+  if (icon === "📷" || t.includes("photo")) return "animate-icon-camera";
+
   return "animate-icon-bob";
+}
+
+function getEventFeatureBadge(event) {
+  const isFull = event.available_seats <= 0;
+  const isFastFilling = !isFull && event.available_seats <= 10;
+
+  if (isFull) {
+    return `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-rose-950/90 text-rose-300 border border-rose-500/60 shadow-[0_0_8px_rgba(244,63,94,0.4)] animate-pulse">Sold Out</span>`;
+  }
+  if (isFastFilling) {
+    return `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-950/90 text-amber-300 border border-amber-500/60 shadow-[0_0_8px_rgba(245,158,11,0.4)] animate-pulse">🔥 High Demand</span>`;
+  }
+
+  const t = (event.title || "").toLowerCase();
+  if (t.includes("code sprint")) {
+    return `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-cyan-950/90 text-cyan-300 border border-cyan-500/60 shadow-[0_0_8px_rgba(6,182,212,0.3)]">💻 3-Hr Hackathon</span>`;
+  }
+  if (t.includes("robo race")) {
+    return `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-cyan-950/90 text-cyan-300 border border-cyan-500/60 shadow-[0_0_8px_rgba(6,182,212,0.3)]">🤖 Battlebots</span>`;
+  }
+  if (t.includes("ai pitch")) {
+    return `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-cyan-950/90 text-cyan-300 border border-cyan-500/60 shadow-[0_0_8px_rgba(6,182,212,0.3)]">🧠 Startup Arena</span>`;
+  }
+  if (t.includes("web design")) {
+    return `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-cyan-950/90 text-cyan-300 border border-cyan-500/60 shadow-[0_0_8px_rgba(6,182,212,0.3)]">🎨 UI Showdown</span>`;
+  }
+  if (t.includes("battle of bands")) {
+    return `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-purple-950/90 text-purple-300 border border-purple-500/60 shadow-[0_0_8px_rgba(168,85,247,0.3)]">🎸 Rock Arena</span>`;
+  }
+  if (t.includes("dance fiesta")) {
+    return `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-pink-950/90 text-pink-300 border border-pink-500/60 shadow-[0_0_8px_rgba(236,72,153,0.3)]">💃 Dance Clash</span>`;
+  }
+  if (t.includes("nukkad")) {
+    return `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-purple-950/90 text-purple-300 border border-purple-500/60 shadow-[0_0_8px_rgba(168,85,247,0.3)]">🎭 Street Theatre</span>`;
+  }
+  if (t.includes("fashion")) {
+    return `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-pink-950/90 text-pink-300 border border-pink-500/60 shadow-[0_0_8px_rgba(236,72,153,0.3)]">👗 Ramp Walk</span>`;
+  }
+  if (t.includes("open mic")) {
+    return `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-purple-950/90 text-purple-300 border border-purple-500/60 shadow-[0_0_8px_rgba(168,85,247,0.3)]">🎤 Live Standup</span>`;
+  }
+  if (t.includes("football")) {
+    return `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-950/90 text-emerald-300 border border-emerald-500/60 shadow-[0_0_8px_rgba(16,185,129,0.3)]">⚽ Turf Cup</span>`;
+  }
+  if (t.includes("chess")) {
+    return `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-950/90 text-emerald-300 border border-emerald-500/60 shadow-[0_0_8px_rgba(16,185,129,0.3)]">♟️ Grandmaster</span>`;
+  }
+  if (t.includes("valorant")) {
+    return `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-rose-950/90 text-rose-300 border border-rose-500/60 shadow-[0_0_8px_rgba(244,63,94,0.3)]">🎮 Esports Clash</span>`;
+  }
+  if (t.includes("ui/ux")) {
+    return `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-950/90 text-amber-300 border border-amber-500/60 shadow-[0_0_8px_rgba(245,158,11,0.3)]">✏️ Hands-on Lab</span>`;
+  }
+  if (t.includes("vibe coding")) {
+    return `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-950/90 text-amber-300 border border-amber-500/60 shadow-[0_0_8px_rgba(245,158,11,0.3)]">⚡ AI Dev Bootcamp</span>`;
+  }
+  if (t.includes("photography")) {
+    return `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-purple-950/90 text-purple-300 border border-purple-500/60 shadow-[0_0_8px_rgba(168,85,247,0.3)]">📷 Photo Trail</span>`;
+  }
+
+  return `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">✨ ${event.category}</span>`;
 }
 
 // -------------------------------------------------------------
@@ -140,7 +212,7 @@ function renderEventsGrid(events) {
   events.forEach((event, index) => {
     const card = document.createElement("div");
     const categoryGlow = getCategoryGlowClass(event.category);
-    const iconAnim = getIconAnimationClass(event.category, event.icon);
+    const iconAnim = getIconAnimationClass(event.category, event.icon, event.title);
 
     card.className =
       `card-fade event-card-tilt relative overflow-hidden bg-slate-800/80 backdrop-blur-md border rounded-2xl p-5 flex flex-col justify-between ${categoryGlow} hover:shadow-2xl transition-shadow duration-300 group`;
@@ -160,22 +232,7 @@ function renderEventsGrid(events) {
       ? "bg-gradient-to-r from-amber-500 to-rose-500 animate-pulse"
       : "bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-400";
 
-    let featureBadge = "";
-    if (isFull) {
-      featureBadge = `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-rose-950/90 text-rose-300 border border-rose-500/60 shadow-[0_0_8px_rgba(244,63,94,0.4)] animate-pulse">Sold Out</span>`;
-    } else if (isFastFilling) {
-      featureBadge = `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-950/90 text-amber-300 border border-amber-500/60 shadow-[0_0_8px_rgba(245,158,11,0.4)] animate-pulse">🔥 High Demand</span>`;
-    } else if (event.category === "Technical") {
-      featureBadge = `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-cyan-950/90 text-cyan-300 border border-cyan-500/60 shadow-[0_0_8px_rgba(6,182,212,0.3)]">⚡ Tech Arena</span>`;
-    } else if (event.category === "Gaming") {
-      featureBadge = `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-rose-950/90 text-rose-300 border border-rose-500/60 shadow-[0_0_8px_rgba(244,63,94,0.3)]">🎮 Battle Mode</span>`;
-    } else if (event.category === "Cultural") {
-      featureBadge = `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-purple-950/90 text-purple-300 border border-purple-500/60 shadow-[0_0_8px_rgba(168,85,247,0.3)]">✨ Main Stage</span>`;
-    } else if (event.category === "Sports") {
-      featureBadge = `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-950/90 text-emerald-300 border border-emerald-500/60 shadow-[0_0_8px_rgba(16,185,129,0.3)]">🏆 Trophy Clash</span>`;
-    } else {
-      featureBadge = `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-950/90 text-amber-300 border border-amber-500/60 shadow-[0_0_8px_rgba(245,158,11,0.3)]">💡 Masterclass</span>`;
-    }
+    const featureBadge = getEventFeatureBadge(event);
 
     card.innerHTML = `
       <div>
@@ -254,11 +311,11 @@ function renderEventsGrid(events) {
   // Initialize VanillaTilt 3D holographic tilt on event cards
   if (typeof VanillaTilt !== "undefined") {
     VanillaTilt.init(document.querySelectorAll(".event-card-tilt"), {
-      max: 10,
+      max: 12,
       speed: 400,
       glare: true,
-      "max-glare": 0.22,
-      scale: 1.02,
+      "max-glare": 0.28,
+      scale: 1.03,
       perspective: 1000
     });
   }
