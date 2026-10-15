@@ -18,6 +18,8 @@ from backend.models import (
     StatsOut,
 )
 from backend.seed_data import seed_events
+from pydantic import BaseModel
+from backend.ai_service import generate_theme_from_prompt, chat_with_zenith
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 FRONTEND_DIR = BASE_DIR / "frontend"
@@ -414,6 +416,37 @@ def cancel_registration(registration_id: int):
     conn.commit()
     conn.close()
     return {"message": f"Registration {registration_id} successfully cancelled"}
+
+
+# ==========================================
+# OpenAI Powered AI Theme Morph & Concierge Endpoints
+# ==========================================
+
+class ThemeRequest(BaseModel):
+    prompt: str
+
+
+class ChatRequest(BaseModel):
+    message: str
+    history: Optional[List[dict]] = None
+
+
+@app.post("/api/ai/morph-theme")
+def morph_theme_endpoint(req: ThemeRequest):
+    """
+    Generate dynamic theme palette and animation physics from any visual prompt.
+    """
+    theme = generate_theme_from_prompt(req.prompt)
+    return theme
+
+
+@app.post("/api/ai/chat")
+def chat_endpoint(req: ChatRequest):
+    """
+    Chat with ZENITH AI assistant capable of answering questions and triggering page actions.
+    """
+    res = chat_with_zenith(req.message, req.history)
+    return res
 
 
 # ==========================================

@@ -17,3 +17,7 @@ Thumbs.db
 
 # Vercel deployment cache
 .vercel/
+
+# Environment variables & secrets
+.env
+*.env

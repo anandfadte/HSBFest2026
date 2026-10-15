@@ -1862,6 +1862,319 @@ function initFestLogoZap() {
 }
 
 // -------------------------------------------------------------
+// OpenAI-Powered Real-Time Atmosphere & UI Morphing Engine
+// -------------------------------------------------------------
+function escapeHtml(str) {
+  if (!str) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function hexToRgbaPrefix(hex) {
+  if (!hex || typeof hex !== "string") return "rgba(6, 182, 212, ";
+  let c = hex.replace("#", "");
+  if (c.length === 3) c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
+  const r = parseInt(c.substring(0, 2), 16) || 6;
+  const g = parseInt(c.substring(2, 4), 16) || 182;
+  const b = parseInt(c.substring(4, 6), 16) || 212;
+  return `rgba(${r}, ${g}, ${b}, `;
+}
+
+async function morphAtmosphere(promptText) {
+  if (!promptText || !promptText.trim()) return;
+  const cleanPrompt = promptText.trim();
+
+  const morphBtn = document.getElementById("btn-ai-morph");
+  const morphText = document.getElementById("btn-ai-morph-text");
+  const morphIcon = document.getElementById("btn-ai-morph-icon");
+  const activePill = document.getElementById("active-theme-pill");
+  const vibeDesc = document.getElementById("theme-vibe-desc");
+  const rippleEl = document.getElementById("ai-theme-ripple");
+
+  // Loading state
+  if (morphBtn) morphBtn.disabled = true;
+  if (morphText) morphText.textContent = "Synthesizing...";
+  if (morphIcon) morphIcon.className = "animate-spin";
+  playHoverBlip();
+
+  try {
+    const res = await fetch("/api/ai/morph-theme", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: cleanPrompt }),
+    });
+
+    if (!res.ok) throw new Error("AI Morph API error: " + res.status);
+    const data = await res.json();
+
+    // 1. Trigger Fullscreen Expanding Liquid Wave
+    if (rippleEl) {
+      rippleEl.classList.remove("liquid-wave-active", "opacity-0");
+      void rippleEl.offsetWidth; // Force Reflow
+      rippleEl.classList.add("liquid-wave-active");
+      setTimeout(() => {
+        rippleEl.classList.remove("liquid-wave-active");
+      }, 1300);
+    }
+
+    // 2. Update CSS Custom Properties
+    const root = document.documentElement;
+    if (data.primary) root.style.setProperty("--theme-primary", data.primary);
+    if (data.secondary) root.style.setProperty("--theme-secondary", data.secondary);
+    if (data.accent) root.style.setProperty("--theme-accent", data.accent);
+    if (data.background_hue) root.style.setProperty("--theme-bg-glow", data.background_hue);
+
+    if (data.laser_gradient && Array.isArray(data.laser_gradient)) {
+      data.laser_gradient.forEach((color, idx) => {
+        root.style.setProperty(`--theme-laser-${idx + 1}`, color);
+      });
+    }
+
+    // 3. Update HUD Display
+    if (activePill) {
+      activePill.textContent = `● ${(data.theme_name || cleanPrompt).toUpperCase()}`;
+    }
+    if (vibeDesc && data.vibe_description) {
+      vibeDesc.textContent = `"${data.vibe_description}"`;
+    }
+
+    // 4. Morph Constellation Background Particles
+    if (typeof festParticleSystem !== "undefined" && festParticleSystem.length > 0) {
+      const p1 = hexToRgbaPrefix(data.primary);
+      const p2 = hexToRgbaPrefix(data.secondary);
+      const p3 = hexToRgbaPrefix(data.accent || data.primary);
+      const newColorPalette = [p1, p2, p3, p1, p2];
+
+      activeParticleColors = newColorPalette;
+      festParticleSystem.forEach((p, idx) => {
+        p.baseColor = newColorPalette[idx % newColorPalette.length];
+        if (data.particle_speed) {
+          p.vx = (Math.random() - 0.5) * 0.85 * data.particle_speed;
+          p.vy = (Math.random() - 0.5) * 0.85 * data.particle_speed;
+        }
+      });
+    }
+
+    // 5. Confetti Spark & Toast
+    if (typeof confetti !== "undefined") {
+      confetti({
+        particleCount: 45,
+        spread: 75,
+        origin: { y: 0.35 },
+        colors: [data.primary, data.secondary, data.accent || "#ffffff"],
+      });
+    }
+    showLiveActivityToastCustom(`🎨 Atmosphere Morphed: ${data.theme_name || cleanPrompt}`);
+  } catch (err) {
+    console.error("Atmosphere morph failed:", err);
+    showLiveActivityToastCustom("⚡ AI Theme calibrated with standard preset.");
+  } finally {
+    if (morphBtn) morphBtn.disabled = false;
+    if (morphText) morphText.textContent = "Morph Site";
+    if (morphIcon) morphIcon.className = "animate-pulse";
+  }
+}
+
+function initAIAtmosphereMorpher() {
+  const form = document.getElementById("ai-theme-form");
+  const input = document.getElementById("ai-theme-input");
+  const presetBtns = document.querySelectorAll(".preset-vibe-btn");
+  const revertBtn = document.getElementById("btn-revert-theme");
+
+  if (form && input) {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      morphAtmosphere(input.value);
+    });
+  }
+
+  presetBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const vibe = btn.getAttribute("data-vibe");
+      if (input) input.value = vibe;
+      morphAtmosphere(vibe);
+    });
+  });
+
+  if (revertBtn) {
+    revertBtn.addEventListener("click", () => {
+      morphAtmosphere("Tokyo Cyberpunk Rain");
+    });
+  }
+}
+
+// -------------------------------------------------------------
+// Floating 3D Kinetic Neural Core (ZENITH AI Concierge)
+// -------------------------------------------------------------
+let zenithChatHistory = [];
+
+function initZenithAICompanion() {
+  const toggleBtn = document.getElementById("btn-toggle-zenith");
+  const drawer = document.getElementById("zenith-chat-drawer");
+  const closeBtn = document.getElementById("close-zenith-chat");
+  const chatForm = document.getElementById("zenith-chat-form");
+  const chatInput = document.getElementById("zenith-chat-input");
+  const messagesBox = document.getElementById("zenith-messages");
+  const quickBtns = document.querySelectorAll(".zenith-quick-prompt");
+
+  function openDrawer() {
+    if (!drawer) return;
+    drawer.classList.remove("hidden");
+    requestAnimationFrame(() => {
+      drawer.classList.remove("opacity-0", "translate-y-4");
+      drawer.classList.add("opacity-100", "translate-y-0");
+    });
+    if (chatInput) chatInput.focus();
+  }
+
+  function closeDrawer() {
+    if (!drawer) return;
+    drawer.classList.add("opacity-0", "translate-y-4");
+    drawer.classList.remove("opacity-100", "translate-y-0");
+    setTimeout(() => {
+      drawer.classList.add("hidden");
+    }, 280);
+  }
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener("click", () => {
+      playHoverBlip();
+      if (drawer.classList.contains("hidden")) {
+        openDrawer();
+      } else {
+        closeDrawer();
+      }
+    });
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+      playHoverBlip();
+      closeDrawer();
+    });
+  }
+
+  quickBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const text = btn.textContent.trim().replace(/^[^\w]+/, "");
+      if (chatInput) chatInput.value = text;
+      handleSendMessage(text);
+    });
+  });
+
+  async function handleSendMessage(text) {
+    if (!text || !text.trim() || !messagesBox) return;
+    const cleanText = text.trim();
+    if (chatInput) chatInput.value = "";
+    playHoverBlip();
+
+    // 1. Append User Message
+    const userMsg = document.createElement("div");
+    userMsg.className = "flex gap-2 justify-end";
+    userMsg.innerHTML = `
+      <div class="bg-cyan-950/80 p-2.5 rounded-2xl rounded-tr-none border border-cyan-500/40 text-cyan-200 leading-relaxed max-w-[85%]">
+        ${escapeHtml(cleanText)}
+      </div>
+      <span class="text-base">🧑‍🎓</span>
+    `;
+    messagesBox.appendChild(userMsg);
+    messagesBox.scrollTop = messagesBox.scrollHeight;
+
+    // 2. Append Thinking Indicator
+    const thinkingMsg = document.createElement("div");
+    thinkingMsg.className = "flex gap-2 zenith-thinking-row";
+    thinkingMsg.innerHTML = `
+      <span class="text-base animate-spin">🤖</span>
+      <div class="bg-slate-850 p-2.5 rounded-2xl rounded-tl-none border border-cyan-500/20 text-slate-400 italic">
+        ZENITH AI is processing...
+      </div>
+    `;
+    messagesBox.appendChild(thinkingMsg);
+    messagesBox.scrollTop = messagesBox.scrollHeight;
+
+    zenithChatHistory.push({ role: "user", content: cleanText });
+
+    try {
+      const res = await fetch("/api/ai/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: cleanText, history: zenithChatHistory }),
+      });
+
+      if (!res.ok) throw new Error("Chat API error: " + res.status);
+      const data = await res.json();
+
+      thinkingMsg.remove();
+
+      // 3. Append AI Response Bubble
+      const aiMsg = document.createElement("div");
+      aiMsg.className = "flex gap-2";
+      aiMsg.innerHTML = `
+        <span class="text-base">🤖</span>
+        <div class="bg-slate-850 p-2.5 rounded-2xl rounded-tl-none border border-cyan-500/30 text-slate-100 leading-relaxed max-w-[88%] shadow-md">
+          ${data.reply || "Systems optimal! Ready for HSB FEST 2026."}
+        </div>
+      `;
+      messagesBox.appendChild(aiMsg);
+      messagesBox.scrollTop = messagesBox.scrollHeight;
+
+      zenithChatHistory.push({ role: "assistant", content: data.reply || "" });
+
+      // 4. Handle autonomous UI action from AI!
+      if (data.action) {
+        executeAIAction(data.action);
+      }
+    } catch (err) {
+      console.error("ZENITH chat error:", err);
+      thinkingMsg.remove();
+      const errMsg = document.createElement("div");
+      errMsg.className = "flex gap-2";
+      errMsg.innerHTML = `
+        <span class="text-base">⚠️</span>
+        <div class="bg-rose-950/80 p-2.5 rounded-2xl border border-rose-500/40 text-rose-200">
+          Could not connect to neural node. Try again shortly!
+        </div>
+      `;
+      messagesBox.appendChild(errMsg);
+      messagesBox.scrollTop = messagesBox.scrollHeight;
+    }
+  }
+
+  function executeAIAction(action) {
+    if (!action || !action.type) return;
+
+    if (action.type === "open_prize_modal") {
+      const cardPrize = document.getElementById("stat-card-prize");
+      if (cardPrize) cardPrize.click();
+    } else if (action.type === "scroll_to") {
+      const targetEl = document.getElementById(action.target);
+      if (targetEl) targetEl.scrollIntoView({ behavior: "smooth" });
+    } else if (action.type === "filter_category") {
+      const btn = document.querySelector(`#category-filters [data-category="${action.category}"]`);
+      if (btn) btn.click();
+      const eventsSection = document.getElementById("events");
+      if (eventsSection) eventsSection.scrollIntoView({ behavior: "smooth" });
+    } else if (action.type === "trigger_launch_sim") {
+      const btnLaunch = document.getElementById("btn-launch-sim");
+      if (btnLaunch) btnLaunch.click();
+    } else if (action.type === "morph_theme" && action.prompt) {
+      morphAtmosphere(action.prompt);
+    }
+  }
+
+  if (chatForm && chatInput) {
+    chatForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      handleSendMessage(chatInput.value);
+    });
+  }
+}
+
+// -------------------------------------------------------------
 // Initial Boot
 // -------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
@@ -1875,6 +2188,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initFestThemeSwitcher();
   initSfxToggle();
   initFestLogoZap();
+  initAIAtmosphereMorpher();
+  initZenithAICompanion();
 
   const audioBtn = document.getElementById("fest-audio-btn");
   if (audioBtn) {
