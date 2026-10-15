@@ -1969,7 +1969,18 @@ async function morphAtmosphere(promptText) {
       });
     }
     showLiveActivityToastCustom(`🎨 Atmosphere Morphed: ${data.theme_name || cleanPrompt}`);
-  } catch (err) {
+
+    // Trigger Festive Spiderman Swing if Diwali or Spider theme is activated
+    if (
+      cleanPrompt.toLowerCase().includes("diwali") ||
+      cleanPrompt.toLowerCase().includes("spidey") ||
+      cleanPrompt.toLowerCase().includes("spider") ||
+      (data.theme_name && (data.theme_name.toLowerCase().includes("diwali") || data.theme_name.toLowerCase().includes("spider")))
+    ) {
+      if (typeof window.triggerFestiveSpidermanSwing === "function") {
+        setTimeout(() => window.triggerFestiveSpidermanSwing(), 400);
+      }
+    }
     console.error("Atmosphere morph failed:", err);
     showLiveActivityToastCustom("⚡ AI Theme calibrated with standard preset.");
   } finally {
@@ -2225,19 +2236,21 @@ function initFestiveSpiderman() {
 
   function getPerchCoords() {
     const heroRect = heroSection.getBoundingClientRect();
-    if (timerContainer) {
-      const timerRect = timerContainer.getBoundingClientRect();
-      // Land perched on top-right shoulder of countdown timer
-      const targetX = timerRect.right - heroRect.left - 50;
-      const targetY = timerRect.top - heroRect.top - 82;
+    const titleEl = document.getElementById("hero-main-title") || document.getElementById("hero-heading-box") || document.querySelector("h1");
+    if (titleEl) {
+      const titleRect = titleEl.getBoundingClientRect();
+      // Hovering directly above "Ignite Your Spark at"
+      // Position him perched right over the upper-right area of the headline ("Spark at")
+      const targetX = (titleRect.right - heroRect.left) - 95;
+      const targetY = (titleRect.top - heroRect.top) - 86;
       return {
-        x: Math.max(10, Math.min(heroRect.width - 120, targetX)),
-        y: Math.max(20, targetY),
+        x: Math.max(16, Math.min(heroRect.width - 120, targetX)),
+        y: Math.max(10, targetY),
       };
     }
     return {
-      x: heroRect.width * 0.72,
-      y: 140,
+      x: heroRect.width * 0.65,
+      y: 60,
     };
   }
 
@@ -2255,12 +2268,12 @@ function initFestiveSpiderman() {
 
     // Start coordinates
     const startX = startSide === "left" ? -140 : heroWidth + 140;
-    const startY = 60;
+    const startY = 50;
     const endX = perch.x;
     const endY = perch.y;
 
     // Web Anchor on top ceiling
-    const anchorX = startSide === "left" ? heroWidth * 0.35 : heroWidth * 0.65;
+    const anchorX = startSide === "left" ? heroWidth * 0.38 : heroWidth * 0.62;
     const anchorY = 0;
 
     webLine.setAttribute("x1", anchorX);
@@ -2280,7 +2293,7 @@ function initFestiveSpiderman() {
       const currentX = startX + (endX - startX) * easeX;
 
       // Vertical parabolic arc (dips in the middle then rises into landing perch)
-      const arcDip = Math.sin(progress * Math.PI) * 160;
+      const arcDip = Math.sin(progress * Math.PI) * 140;
       const currentY = startY + (endY - startY) * progress + arcDip;
 
       // Dynamic tilt angle
@@ -2305,18 +2318,27 @@ function initFestiveSpiderman() {
       if (progress < 1) {
         requestAnimationFrame(animateSwing);
       } else {
-        // Landing Perch Complete!
+        // Landing Perch Complete! Hovering directly above "Ignite Your Spark at"
         isSwinging = false;
-        webLine.setAttribute("opacity", "0");
         spidey.style.transform = "rotate(0deg)";
         spidey.classList.add("spidey-perched");
         playHoverBlip();
+
+        // Connect golden web strand from ceiling to Spidey's hand while suspended
+        const spideyHandX = endX + (startSide === "left" ? 85 : 30);
+        const spideyHandY = endY + 35;
+        const perchAnchorX = endX + 55;
+        webLine.setAttribute("x1", perchAnchorX);
+        webLine.setAttribute("y1", 0);
+        webLine.setAttribute("x2", spideyHandX);
+        webLine.setAttribute("y2", spideyHandY);
+        webLine.setAttribute("opacity", "0.75");
 
         // Landing confetti puff
         if (typeof confetti !== "undefined") {
           const rect = spidey.getBoundingClientRect();
           confetti({
-            particleCount: 20,
+            particleCount: 22,
             spread: 45,
             origin: {
               x: (rect.left + rect.width / 2) / window.innerWidth,
@@ -2358,6 +2380,7 @@ function initFestiveSpiderman() {
     spidey.classList.remove("spidey-perched", "animate-spidey-flip");
     void spidey.offsetWidth; // Reflow
     spidey.classList.add("animate-spidey-flip");
+    webLine.setAttribute("opacity", "0.25");
 
     // Double firework confetti cannon
     if (typeof confetti !== "undefined") {
@@ -2380,10 +2403,28 @@ function initFestiveSpiderman() {
     setTimeout(() => {
       spidey.classList.remove("animate-spidey-flip");
       spidey.classList.add("spidey-perched");
+      webLine.setAttribute("opacity", "0.75");
     }, 900);
   }
 
   spidey.addEventListener("click", triggerSpidermanAcrobatics);
+
+  // Keep Spidey anchored properly on window resize
+  window.addEventListener("resize", () => {
+    if (!isSwinging && spidey.classList.contains("spidey-perched")) {
+      const perch = getPerchCoords();
+      spidey.style.left = `${perch.x}px`;
+      spidey.style.top = `${perch.y}px`;
+      const spideyHandX = perch.x + 85;
+      const spideyHandY = perch.y + 35;
+      const perchAnchorX = perch.x + 55;
+      webLine.setAttribute("x1", perchAnchorX);
+      webLine.setAttribute("y1", 0);
+      webLine.setAttribute("x2", spideyHandX);
+      webLine.setAttribute("y2", spideyHandY);
+      webLine.setAttribute("opacity", "0.75");
+    }
+  });
 
   // Global trigger so AI or Preset button can swing Spider-Man
   window.triggerFestiveSpidermanSwing = () => {
