@@ -662,6 +662,89 @@
       animation: orbitSpin2 5.5s linear infinite;
     }
 
+    /* Festive Diya Flame Flicker */
+    @keyframes diyaFlameFlicker {
+      0%, 100% {
+        transform: scale(1) translate(0, 0);
+        opacity: 0.95;
+      }
+      25% {
+        transform: scale(0.92, 1.08) translate(-0.5px, -1px);
+        opacity: 0.85;
+      }
+      50% {
+        transform: scale(1.06, 0.94) translate(0.5px, 0.5px);
+        opacity: 1;
+      }
+      75% {
+        transform: scale(0.95, 1.04) translate(-0.3px, -0.5px);
+        opacity: 0.9;
+      }
+    }
+    .diya-flame-core {
+      animation: diyaFlameFlicker 0.4s ease-in-out infinite alternate;
+      transform-origin: 12px 11px;
+    }
+    .diya-flame-outer {
+      animation: diyaFlameFlicker 0.6s ease-in-out infinite alternate;
+      transform-origin: 12px 12px;
+    }
+
+    /* Spider-Man Gentle Perch Hover Breathing */
+    @keyframes spideyPerchBob {
+      0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-5px) rotate(1.5deg);
+      }
+    }
+    .spidey-perched {
+      animation: spideyPerchBob 2.8s ease-in-out infinite;
+    }
+
+    /* Spider-Man 360 Acrobatic Backflip on Click */
+    @keyframes spideyAcrobaticFlip {
+      0% {
+        transform: translateY(0) scale(1) rotate(0deg);
+      }
+      40% {
+        transform: translateY(-45px) scale(1.18) rotate(-180deg);
+      }
+      80% {
+        transform: translateY(-8px) scale(1.05) rotate(-360deg);
+      }
+      100% {
+        transform: translateY(0) scale(1) rotate(-360deg);
+      }
+    }
+    .animate-spidey-flip {
+      animation: spideyAcrobaticFlip 0.85s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    /* Festive Phuljhadi / Sparkler Embers */
+    .sparkler-ember {
+      position: absolute;
+      width: 4.5px;
+      height: 4.5px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 35;
+      animation: sparklerFade 0.75s ease-out forwards;
+    }
+    @keyframes sparklerFade {
+      0% {
+        transform: scale(1.5) translateY(0);
+        opacity: 1;
+        filter: brightness(1.8);
+      }
+      100% {
+        transform: scale(0.2) translateY(28px);
+        opacity: 0;
+        filter: brightness(1);
+      }
+    }
+
     /* 3D Digit Flip on Countdown Second Tick */
     @keyframes digitFlipUp {
       0% {
@@ -954,6 +1037,126 @@
     <!-- Interactive Cyber Constellation Canvas (Runs smooth at 60 FPS) -->
     <canvas id="fest-particles-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
 
+    <!-- Animated Festive Spider-Man Stage (Diwali Celebration) -->
+    <div id="spiderman-hero-stage" class="absolute inset-0 pointer-events-none z-25 overflow-hidden">
+      <!-- Web line SVG -->
+      <svg id="spidey-web-line" class="absolute inset-0 w-full h-full pointer-events-none z-20">
+        <defs>
+          <filter id="glow-web" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        <line id="web-strand" x1="0" y1="0" x2="0" y2="0" stroke="#fcd34d" stroke-width="2.5" stroke-dasharray="4 2" filter="url(#glow-web)" opacity="0" />
+      </svg>
+
+      <!-- Festive Spider-Man Character Actor -->
+      <div
+        id="festive-spiderman"
+        class="absolute cursor-pointer pointer-events-auto select-none transition-all duration-200 filter drop-shadow-[0_0_18px_rgba(245,158,11,0.7)] group"
+        style="left: -140px; top: 120px;"
+        title="Click Festive Spider-Man for an aerial web-zip and Diwali greeting!"
+      >
+        <!-- Speech Bubble (Appears on click or landing) -->
+        <div id="spidey-speech" class="absolute -top-14 left-1/2 -translate-x-1/2 hidden opacity-0 transition-all duration-300 pointer-events-none z-40 whitespace-nowrap">
+          <div class="px-3 py-1 rounded-2xl bg-slate-900/95 border-2 border-amber-400 text-amber-200 text-xs font-bold shadow-[0_0_20px_rgba(245,158,11,0.7)] flex items-center gap-1.5">
+            <span>🪔</span>
+            <span id="spidey-speech-text">Happy Diwali from HSB FEST 2026! 🕷️✨</span>
+          </div>
+          <div class="w-2.5 h-2.5 bg-slate-900 border-r-2 border-b-2 border-amber-400 transform rotate-45 mx-auto -mt-1.5"></div>
+        </div>
+
+        <!-- The Stylized Festive Spider-Man SVG Illustration -->
+        <div id="spidey-avatar" class="relative w-24 h-24 sm:w-28 sm:h-28">
+          <svg viewBox="0 0 120 120" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="diyaGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#fff" />
+                <stop offset="40%" stop-color="#fbbf24" />
+                <stop offset="80%" stop-color="#ea580c" />
+                <stop offset="100%" stop-color="transparent" />
+              </radialGradient>
+              <linearGradient id="spideySuit" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ef4444" />
+                <stop offset="100%" stop-color="#991b1b" />
+              </linearGradient>
+              <linearGradient id="spideyBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#0284c7" />
+                <stop offset="100%" stop-color="#0f172a" />
+              </linearGradient>
+              <linearGradient id="marigoldGold" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#fef08a" />
+                <stop offset="50%" stop-color="#f59e0b" />
+                <stop offset="100%" stop-color="#d97706" />
+              </linearGradient>
+            </defs>
+
+            <!-- Shadow underneath -->
+            <ellipse cx="60" cy="112" rx="26" ry="6" fill="rgba(0,0,0,0.4)" filter="blur(3px)" />
+
+            <!-- Body / Torso (Crouching Superhero Pose) -->
+            <path d="M42 62 C38 75 35 90 42 104 C46 95 54 90 60 90 C66 90 74 95 78 104 C85 90 82 75 78 62 Z" fill="url(#spideyBlue)" stroke="#0f172a" stroke-width="1.5" />
+            <path d="M48 62 C46 72 50 82 60 84 C70 82 74 72 72 62 Z" fill="url(#spideySuit)" />
+            
+            <!-- Spider Chest Insignia -->
+            <path d="M60 68 L57 73 L60 76 L63 73 Z" fill="#0f172a" />
+            <path d="M57 70 L52 67 M63 70 L68 67 M57 74 L51 76 M63 74 L69 76" stroke="#0f172a" stroke-width="1.2" stroke-linecap="round" />
+
+            <!-- Festive Marigold Garland (Genda Phool) Across Shoulder -->
+            <path d="M40 56 Q60 70 78 56" stroke="url(#marigoldGold)" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 6" filter="drop-shadow(0 0 4px #f59e0b)" />
+            <path d="M42 58 Q60 72 76 58" stroke="#ea580c" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6" />
+
+            <!-- Left Arm & Hand Holding Glowing Diya -->
+            <path d="M44 64 C35 68 28 72 24 66 C22 62 26 58 32 60" fill="url(#spideySuit)" stroke="#7f1d1d" stroke-width="1.2" />
+            
+            <!-- Ornate Golden Earthen Diwali Diya (🪔) -->
+            <g transform="translate(14, 52)">
+              <!-- Ambient Flame Glow Halo -->
+              <circle cx="12" cy="4" r="16" fill="url(#diyaGlow)" opacity="0.75" class="animate-pulse" />
+              <!-- Diya Base (Terracotta / Golden Earthen Clay) -->
+              <path d="M4 14 C4 19 20 19 20 14 C22 11 20 9 12 9 C4 9 2 11 4 14 Z" fill="url(#marigoldGold)" stroke="#b45309" stroke-width="1" />
+              <!-- Flickering Diya Flame -->
+              <path class="diya-flame-core" d="M12 2 C10 6 9 9 12 11 C15 9 14 6 12 2 Z" fill="#fff7ed" />
+              <path class="diya-flame-outer" d="M12 0 C9 5 8 9 12 12 C16 9 15 5 12 0 Z" fill="#f97316" opacity="0.85" />
+            </g>
+
+            <!-- Right Arm (Web Shooter Ready) -->
+            <path d="M76 64 C86 68 94 62 98 56 C96 52 90 54 86 58" fill="url(#spideySuit)" stroke="#7f1d1d" stroke-width="1.2" />
+            <!-- Festive Golden Wristband on Web Shooter Hand -->
+            <rect x="91" y="54" width="4" height="6" rx="1.5" fill="#f59e0b" stroke="#78350f" stroke-width="0.8" />
+
+            <!-- Head & Iconic Mask -->
+            <ellipse cx="60" cy="42" rx="19" ry="22" fill="url(#spideySuit)" stroke="#991b1b" stroke-width="1.5" />
+            
+            <!-- Web Lines on Mask -->
+            <path d="M60 20 L60 64 M41 42 L79 42" stroke="#7f1d1d" stroke-width="0.8" opacity="0.8" />
+            <path d="M45 28 Q60 36 75 28 M43 56 Q60 48 77 56" stroke="#7f1d1d" stroke-width="0.8" opacity="0.8" />
+
+            <!-- Expressive Glowing White/Cyan Spidey Eyes -->
+            <!-- Left Eye -->
+            <path d="M46 38 C47 33 53 35 57 41 C55 45 49 46 46 38 Z" fill="#ffffff" stroke="#0f172a" stroke-width="2.5" class="spidey-eye" filter="drop-shadow(0 0 4px #06b6d4)" />
+            <!-- Right Eye -->
+            <path d="M74 38 C73 33 67 35 63 41 C65 45 71 46 74 38 Z" fill="#ffffff" stroke="#0f172a" stroke-width="2.5" class="spidey-eye" filter="drop-shadow(0 0 4px #06b6d4)" />
+
+            <!-- Festive Tilak on Forehead -->
+            <ellipse cx="60" cy="30" rx="1.5" ry="3.5" fill="#ea580c" />
+            <circle cx="60" cy="34" r="1.2" fill="#fef08a" />
+          </svg>
+        </div>
+
+        <!-- Mini Interactive Status Pill under Spidey -->
+        <div class="text-center -mt-1">
+          <span class="inline-block text-[8px] font-mono font-black px-2 py-0.5 rounded-full bg-slate-900/95 text-amber-300 border border-amber-500/80 shadow-[0_0_10px_rgba(245,158,11,0.6)]">
+            🪔 DIWALI SPIDEY
+          </span>
+        </div>
+      </div>
+
+    </div>
+
     <!-- Floating Ambient Neon Blobs -->
     <div class="absolute -top-20 left-1/4 w-72 h-72 sm:w-96 sm:h-96 bg-purple-600/25 rounded-full blur-3xl pointer-events-none animate-float-slow"></div>
     <div class="absolute top-10 right-1/4 w-72 h-72 sm:w-96 sm:h-96 bg-pink-600/20 rounded-full blur-3xl pointer-events-none animate-float-reverse"></div>
@@ -1130,6 +1333,9 @@
           <!-- 1-Click Preset Vibes -->
           <div class="flex items-center gap-1.5 mt-2 overflow-x-auto pb-1 scrollbar-none text-[10px] text-slate-300">
             <span class="text-[9px] text-slate-400 font-mono uppercase tracking-wider">Presets:</span>
+            <button type="button" data-vibe="Cyber Diwali: Festival of Lights" class="preset-vibe-btn px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-500/30 to-rose-500/30 hover:from-amber-500 hover:to-rose-500 text-amber-300 hover:text-slate-950 border border-amber-500/60 font-bold transition cursor-pointer whitespace-nowrap shadow-[0_0_10px_rgba(245,158,11,0.3)]">
+              🪔 Diwali Spidey
+            </button>
             <button type="button" data-vibe="Tokyo Cyberpunk Rain" class="preset-vibe-btn px-2 py-0.5 rounded-full bg-slate-800 hover:bg-cyan-950 hover:text-cyan-300 border border-slate-700 transition cursor-pointer whitespace-nowrap">
               🌧️ Tokyo Cyber
             </button>
@@ -1161,7 +1367,7 @@
       </div>
 
       <!-- Live Fest Countdown Timer with Flowing Laser Neon Border & Full Sci-Fi HUD -->
-      <div class="relative inline-block my-2 text-center select-none max-w-xl w-full mx-auto">
+      <div id="fest-timer-container" class="relative inline-block my-2 text-center select-none max-w-xl w-full mx-auto">
         <!-- Ambient Glowing Neon Halo Behind Timer -->
         <div class="timer-ambient-halo"></div>
 

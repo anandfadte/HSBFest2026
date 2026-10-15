@@ -81,6 +81,30 @@ PRESET_THEMES: Dict[str, Dict[str, Any]] = {
         "particle_speed": 0.9,
         "vibe_description": "Floating stardust constellations drifting across deep interstellar violet voids.",
     },
+    "diwali": {
+        "theme_name": "Cyber Diwali: Festival of Lights",
+        "tagline": "SPIDER-VERSE DIYA // GOLDEN EMBERS",
+        "primary": "#f59e0b",
+        "secondary": "#ef4444",
+        "accent": "#06b6d4",
+        "background_hue": "rgba(245, 158, 11, 0.28)",
+        "laser_gradient": ["#f59e0b", "#ef4444", "#fbbf24", "#06b6d4", "#f59e0b"],
+        "particle_color": "#fbbf24",
+        "particle_speed": 1.7,
+        "vibe_description": "Spider-Man web-slinging through vibrant Diwali fireworks, glowing earthen diyas, and electric crimson lights across HSB FEST 2026.",
+    },
+    "spiderman": {
+        "theme_name": "Spider-Verse Diwali Radiance",
+        "tagline": "WEB SLINGER // FESTIVE FIREWORKS",
+        "primary": "#ef4444",
+        "secondary": "#f59e0b",
+        "accent": "#06b6d4",
+        "background_hue": "rgba(239, 68, 68, 0.25)",
+        "laser_gradient": ["#ef4444", "#f59e0b", "#3b82f6", "#fcd34d", "#ef4444"],
+        "particle_color": "#f59e0b",
+        "particle_speed": 1.9,
+        "vibe_description": "Friendly neighborhood Spider-Man web-zipping across the campus skies carrying glowing golden diyas and fireworks.",
+    },
 }
 
 
@@ -184,6 +208,7 @@ Allowed action types:
 - {"type": "filter_category", "category": "Technical" | "Cultural" | "Gaming" | "Sports" | "Workshop" | "All"}
 - {"type": "open_prize_modal"}
 - {"type": "trigger_launch_sim"}
+- {"type": "trigger_spiderman_swing"}
 - {"type": "morph_theme", "prompt": "<theme prompt>"}
 
 Always reply in strict JSON format:

@@ -2161,6 +2161,10 @@ function initZenithAICompanion() {
     } else if (action.type === "trigger_launch_sim") {
       const btnLaunch = document.getElementById("btn-launch-sim");
       if (btnLaunch) btnLaunch.click();
+    } else if (action.type === "trigger_spiderman_swing") {
+      if (typeof window.triggerFestiveSpidermanSwing === "function") {
+        window.triggerFestiveSpidermanSwing();
+      }
     } else if (action.type === "morph_theme" && action.prompt) {
       morphAtmosphere(action.prompt);
     }
@@ -2172,6 +2176,231 @@ function initZenithAICompanion() {
       handleSendMessage(chatInput.value);
     });
   }
+}
+
+// -------------------------------------------------------------
+// Animated Festive Spider-Man (Cyber Diwali Web-Slinger)
+// -------------------------------------------------------------
+const spideyFestiveQuotes = [
+  "With great festive power comes great coding responsibility! 🪔✨",
+  "My Spider-Sense is tingling... ₹150,000 in prizes and infinite Kaju Katli! 🕷️✨",
+  "Friendly neighborhood Spider-Man here, swapping web fluid for festive sparklers! 🎆",
+  "Swapping web fluid for laddoos today! Happy Diwali from HSB FEST 2026! 🪔",
+  "Swinging by to make sure everyone registers before the arenas fill up! 🕸️",
+  "May your Diwali shine brighter than our 10-segment cyber core! 🪔💥",
+];
+
+function initFestiveSpiderman() {
+  const stage = document.getElementById("spiderman-hero-stage");
+  const heroSection = document.getElementById("hero-section");
+  const spidey = document.getElementById("festive-spiderman");
+  const webLine = document.getElementById("web-strand");
+  const speechBubble = document.getElementById("spidey-speech");
+  const speechText = document.getElementById("spidey-speech-text");
+  const timerContainer = document.getElementById("fest-timer-container");
+
+  if (!stage || !heroSection || !spidey || !webLine) return;
+
+  let isSwinging = false;
+  let quoteIndex = 0;
+
+  function createSparklerEmber(x, y) {
+    if (!stage) return;
+    const ember = document.createElement("span");
+    ember.className = "sparkler-ember";
+
+    const colors = ["#fcd34d", "#fbbf24", "#f59e0b", "#f43f5e", "#38bdf8", "#ffffff"];
+    const col = colors[Math.floor(Math.random() * colors.length)];
+    const offsetX = (Math.random() - 0.5) * 20;
+    const offsetY = (Math.random() - 0.5) * 16;
+
+    ember.style.left = `${x + offsetX}px`;
+    ember.style.top = `${y + offsetY}px`;
+    ember.style.backgroundColor = col;
+    ember.style.boxShadow = `0 0 10px ${col}, 0 0 18px ${col}`;
+
+    stage.appendChild(ember);
+    setTimeout(() => ember.remove(), 750);
+  }
+
+  function getPerchCoords() {
+    const heroRect = heroSection.getBoundingClientRect();
+    if (timerContainer) {
+      const timerRect = timerContainer.getBoundingClientRect();
+      // Land perched on top-right shoulder of countdown timer
+      const targetX = timerRect.right - heroRect.left - 50;
+      const targetY = timerRect.top - heroRect.top - 82;
+      return {
+        x: Math.max(10, Math.min(heroRect.width - 120, targetX)),
+        y: Math.max(20, targetY),
+      };
+    }
+    return {
+      x: heroRect.width * 0.72,
+      y: 140,
+    };
+  }
+
+  function swingSpiderman(startSide = "left") {
+    if (isSwinging) return;
+    isSwinging = true;
+
+    spidey.classList.remove("spidey-perched", "animate-spidey-flip");
+    if (speechBubble) {
+      speechBubble.classList.add("hidden", "opacity-0");
+    }
+
+    const heroWidth = heroSection.offsetWidth;
+    const perch = getPerchCoords();
+
+    // Start coordinates
+    const startX = startSide === "left" ? -140 : heroWidth + 140;
+    const startY = 60;
+    const endX = perch.x;
+    const endY = perch.y;
+
+    // Web Anchor on top ceiling
+    const anchorX = startSide === "left" ? heroWidth * 0.35 : heroWidth * 0.65;
+    const anchorY = 0;
+
+    webLine.setAttribute("x1", anchorX);
+    webLine.setAttribute("y1", anchorY);
+    webLine.setAttribute("opacity", "0.95");
+
+    const duration = 2200; // 2.2 seconds swing
+    const startTime = performance.now();
+    let lastEmberTime = 0;
+
+    function animateSwing(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Smooth pendulum swing curve (sinusoidal dip)
+      const easeX = 1 - Math.pow(1 - progress, 2.5);
+      const currentX = startX + (endX - startX) * easeX;
+
+      // Vertical parabolic arc (dips in the middle then rises into landing perch)
+      const arcDip = Math.sin(progress * Math.PI) * 160;
+      const currentY = startY + (endY - startY) * progress + arcDip;
+
+      // Dynamic tilt angle
+      const swingAngle = Math.cos(progress * Math.PI) * 28 * (startSide === "left" ? 1 : -1);
+      spidey.style.left = `${currentX}px`;
+      spidey.style.top = `${currentY}px`;
+      spidey.style.transform = `rotate(${swingAngle}deg)`;
+
+      // Web Line Endpoint attached to Spidey hand
+      const spideyHandX = currentX + (startSide === "left" ? 85 : 30);
+      const spideyHandY = currentY + 35;
+      webLine.setAttribute("x2", spideyHandX);
+      webLine.setAttribute("y2", spideyHandY);
+
+      // Spawn sparkler trail
+      if (currentTime - lastEmberTime > 35) {
+        lastEmberTime = currentTime;
+        createSparklerEmber(currentX + 50, currentY + 70);
+        createSparklerEmber(spideyHandX, spideyHandY);
+      }
+
+      if (progress < 1) {
+        requestAnimationFrame(animateSwing);
+      } else {
+        // Landing Perch Complete!
+        isSwinging = false;
+        webLine.setAttribute("opacity", "0");
+        spidey.style.transform = "rotate(0deg)";
+        spidey.classList.add("spidey-perched");
+        playHoverBlip();
+
+        // Landing confetti puff
+        if (typeof confetti !== "undefined") {
+          const rect = spidey.getBoundingClientRect();
+          confetti({
+            particleCount: 20,
+            spread: 45,
+            origin: {
+              x: (rect.left + rect.width / 2) / window.innerWidth,
+              y: (rect.top + rect.height / 2) / window.innerHeight,
+            },
+            colors: ["#f59e0b", "#fbbf24", "#ef4444", "#ffffff"],
+          });
+        }
+
+        // Show Festive Quote
+        showSpideySpeech(spideyFestiveQuotes[quoteIndex % spideyFestiveQuotes.length]);
+        quoteIndex++;
+      }
+    }
+
+    requestAnimationFrame(animateSwing);
+  }
+
+  function showSpideySpeech(text) {
+    if (!speechBubble || !speechText) return;
+    speechText.textContent = text;
+    speechBubble.classList.remove("hidden");
+    requestAnimationFrame(() => {
+      speechBubble.classList.remove("opacity-0");
+      speechBubble.classList.add("opacity-100");
+    });
+
+    setTimeout(() => {
+      speechBubble.classList.remove("opacity-100");
+      speechBubble.classList.add("opacity-0");
+      setTimeout(() => speechBubble.classList.add("hidden"), 300);
+    }, 4500);
+  }
+
+  function triggerSpidermanAcrobatics() {
+    if (isSwinging) return;
+    playHoverBlip();
+
+    spidey.classList.remove("spidey-perched", "animate-spidey-flip");
+    void spidey.offsetWidth; // Reflow
+    spidey.classList.add("animate-spidey-flip");
+
+    // Double firework confetti cannon
+    if (typeof confetti !== "undefined") {
+      const rect = spidey.getBoundingClientRect();
+      const originX = (rect.left + rect.width / 2) / window.innerWidth;
+      const originY = (rect.top + rect.height / 2) / window.innerHeight;
+
+      confetti({
+        particleCount: 35,
+        spread: 60,
+        origin: { x: originX, y: originY },
+        colors: ["#f59e0b", "#ef4444", "#fbbf24", "#06b6d4"],
+      });
+    }
+
+    const randomQuote = spideyFestiveQuotes[Math.floor(Math.random() * spideyFestiveQuotes.length)];
+    showSpideySpeech(randomQuote);
+    showLiveActivityToastCustom(`🕷️ Spidey: ${randomQuote}`);
+
+    setTimeout(() => {
+      spidey.classList.remove("animate-spidey-flip");
+      spidey.classList.add("spidey-perched");
+    }, 900);
+  }
+
+  spidey.addEventListener("click", triggerSpidermanAcrobatics);
+
+  // Global trigger so AI or Preset button can swing Spider-Man
+  window.triggerFestiveSpidermanSwing = () => {
+    swingSpiderman(Math.random() < 0.5 ? "left" : "right");
+  };
+
+  // Initial cinematic entrance swing after 1.8 seconds
+  setTimeout(() => {
+    swingSpiderman("left");
+  }, 1800);
+
+  // Automatic swing loop every 26 seconds to keep hero lively
+  setInterval(() => {
+    if (!isSwinging && document.visibilityState === "visible") {
+      swingSpiderman(Math.random() < 0.5 ? "left" : "right");
+    }
+  }, 26000);
 }
 
 // -------------------------------------------------------------
@@ -2190,6 +2419,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initFestLogoZap();
   initAIAtmosphereMorpher();
   initZenithAICompanion();
+  initFestiveSpiderman();
 
   const audioBtn = document.getElementById("fest-audio-btn");
   if (audioBtn) {
